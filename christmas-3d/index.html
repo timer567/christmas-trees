@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D Christmas Wishes</title>
+<style>
+:root {
+  --site-primary: #1d7545;
+  --site-secondary: #d8f5df;
+  --site-background: #050907;
+  --site-on-primary: #ffffff;
+  --site-on-secondary: #153d27;
+  --site-on-background: #f7fff8;
+  --site-font-body: ui-rounded, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --site-font-heading: "Brush Script MT", "Segoe Script", cursive;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body { font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+#app { min-height: 100svh; width: 100%; overflow: clip; position: relative; display: grid; place-items: center; background-color: var(--site-background); color: var(--site-on-background); isolation: isolate; border-radius: 0; }
+#app::before { content:""; position:absolute; z-index:-1; inset:-12%; pointer-events:none; background:radial-gradient(ellipse at 50% 78%,#174b32 0%,transparent 43%),radial-gradient(ellipse at 18% 28%,#174c3b88 0%,transparent 42%),linear-gradient(180deg,#061b1c 0%,#0b211c 55%,#020806 100%); transition:background 1.8s ease,filter 1.8s ease; }
+#app::after { content:"✦　　❄　　 ✧　　　　 ❄　　　✦"; position:absolute; z-index:0; inset:12% 0 auto; height:45%; text-align:center; color:#e9fff0aa; font-size:clamp(18px,4vw,34px); letter-spacing:1.4em; pointer-events:none; text-shadow:0 0 18px currentColor; opacity:.35; animation:ambientDrift 16s ease-in-out infinite alternate; transition:color 1.5s,opacity 1.5s; }
+@keyframes ambientDrift { to { transform:translateY(24px); opacity:.7; } }
+#app.theme-jingle::before { background:radial-gradient(ellipse at 50% 75%,#a64b1e 0%,transparent 42%),radial-gradient(ellipse at 18% 22%,#315d8b 0%,transparent 46%),linear-gradient(180deg,#102c50 0%,#17395a 52%,#101b2e 100%); }
+#app.theme-jingle::after { color:#ffe9a0; opacity:.62; }
+#app.theme-wewish::before { background:radial-gradient(ellipse at 50% 80%,#a72d35 0%,transparent 43%),radial-gradient(ellipse at 80% 22%,#1e805b99 0%,transparent 45%),linear-gradient(180deg,#123c35 0%,#183c35 52%,#101d25 100%); }
+#app.theme-wewish::after { content:"🎁　　 ✨　　 🎄　　 ✨　　 🎁"; color:#ffe7bb; opacity:.58; letter-spacing:.65em; }
+#app.theme-deck::before { background:radial-gradient(ellipse at 50% 75%,#a65a20 0%,transparent 42%),radial-gradient(ellipse at 50% 20%,#8d4b1e77 0%,transparent 48%),linear-gradient(180deg,#3c251e 0%,#39291e 52%,#130f0c 100%); }
+#app.theme-deck::after { content:"🕯　　 ✨　　 🕯　　 ✨　　 🕯"; color:#ffd58a; opacity:.55; }
+#app.theme-silent::before { background:radial-gradient(ellipse at 50% 75%,#244e83 0%,transparent 44%),radial-gradient(ellipse at 82% 18%,#a9d9ff55 0%,transparent 34%),linear-gradient(180deg,#07152f 0%,#102b50 54%,#050d20 100%); }
+#app.theme-silent::after { content:"☾　　 ✧　　 ❄　　 ✧　　 ☾"; color:#d8edff; opacity:.52; }
+.scene { width: min(100%, 760px); min-height: 100svh; position: relative; display: flex; flex-direction: column; align-items: center; padding: 34px 16px 24px; }
+.stars, .snow { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: var(--site-decoration-opacity); }
+.star { position: absolute; width: var(--size); height: var(--size); border-radius: 50%; background: #fff9d7; box-shadow: 0 0 9px 3px #fff8c977, 0 0 24px 6px #dfffe855; animation: twinkle var(--duration) ease-in-out infinite alternate; }
+.star.cross::before, .star.cross::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background: #fff; border-radius: 4px; box-shadow: 0 0 8px #fff; }
+.star.cross::before { width: 1.5px; height: 26px; } .star.cross::after { width: 26px; height: 1.5px; }
+@keyframes twinkle { to { opacity: .28; transform: scale(.55); } }
+.snowflake { position: absolute; top: -20px; color: white; text-shadow: 0 0 8px white; animation: snowfall var(--duration) linear infinite; }
+#app.theme-jingle .snowflake { color:#fff0bd; text-shadow:0 0 10px #ffe8a5; }
+#app.theme-wewish .snowflake { color:#ffe5e5; text-shadow:0 0 10px #ffb4a5; }
+#app.theme-deck .snowflake { color:#ffdda0; text-shadow:0 0 10px #ffb85c; }
+#app.theme-silent .snowflake { color:#c8e8ff; text-shadow:0 0 12px #9dcfff; }
+@keyframes snowfall { to { transform: translate(var(--drift), 110vh) rotate(300deg); opacity: .1; } }
+.heading { z-index: 3; text-align: center; text-shadow: 0 0 8px white, 0 0 25px #d8ffc8; }
+.script { font-family: var(--site-font-heading); font-size: clamp(46px, 10vw, 76px); line-height: .9; font-style: italic; letter-spacing: -2px; color: #fffef0; }
+.subtitle { margin-top: 13px; font-size: 10px; letter-spacing: .42em; color: #dff7e4; opacity: .8; }
+.stage { z-index: 2; width: min(94vw, 560px); height: min(66vh, 570px); min-height: 410px; position: relative; display: grid; place-items: center; perspective: 1000px; perspective-origin: 50% 43%; touch-action: pan-y; cursor: grab; }
+.stage:active { cursor: grabbing; }
+.world { width: 300px; height: 420px; position: relative; transform-style: preserve-3d; transform: rotateX(-8deg) rotateY(-24deg); transition: transform .15s ease-out; }
+.auto .world { animation: gentleTurn 18s ease-in-out infinite; }
+@keyframes gentleTurn { 0%,100% { transform: rotateX(-8deg) rotateY(-22deg); } 50% { transform: rotateX(-5deg) rotateY(22deg); } }
+.tree3d { position: absolute; inset: 0; transform-style: preserve-3d; }
+.trunk { position: absolute; width: 58px; height: 105px; left: 121px; bottom: -14px; transform: translateZ(0); border-radius: 8px 8px 13px 13px; background: linear-gradient(90deg,#713014,#d66a31 35%,#9b3d1c 72%,#51200f); box-shadow: 12px 12px 18px #0009; }
+.tier { position: absolute; left: 50%; bottom: var(--bottom); width: var(--width); height: var(--height); margin-left: calc(var(--width) / -2); transform-style: preserve-3d; transform: translateZ(var(--z)); }
+.cone { position: absolute; inset: 0; clip-path: polygon(50% 0%, 100% 100%, 0% 100%); border-radius: 12px; background: linear-gradient(100deg,#06391f 0%,#08733b 18%,#42c66d 42%,#83ef91 53%,#219c50 76%,#063b22 100%); filter: drop-shadow(7px 9px 5px #0008); }
+.cone::after { content:""; position:absolute; left: 8%; right: 8%; bottom: 8%; height: 18%; border-radius: 50%; background: linear-gradient(90deg,#0c522d,#8ef29a 45%,#17683a); filter: blur(7px); opacity:.8; }
+.tier::before { content:""; position:absolute; inset: 4% 0 0; clip-path: polygon(50% 0,100% 100%,0 100%); transform: translateZ(-24px); background: linear-gradient(90deg,#032b19,#0b5b31 55%,#021e12); filter: brightness(.75); }
+.snow-rim { position:absolute; left: 8%; right: 8%; bottom: -1%; height: 14%; border-radius: 50%; border-bottom: 8px solid #f5fff6; border-left: 3px solid #effff3; border-right: 3px solid #effff3; transform: rotateX(66deg) translateZ(8px); filter: drop-shadow(0 0 5px white); opacity:.95; }
+.t1 { --width: 118px; --height: 140px; --bottom: 276px; --z: 16px; }
+.t2 { --width: 190px; --height: 168px; --bottom: 198px; --z: 10px; }
+.t3 { --width: 250px; --height: 190px; --bottom: 112px; --z: 3px; }
+.t4 { --width: 306px; --height: 204px; --bottom: 18px; --z: -8px; }
+.bulb { position:absolute; width: 13px; height: 13px; border-radius:50%; background: radial-gradient(circle at 30% 25%,#fff 0 8%,#fff6bb 15%,#f4c95e 43%,#9a591a 100%); box-shadow: 0 0 8px 3px #fff5a5; transform: translateZ(13px); opacity: .15; transition: opacity 1.2s, box-shadow 1.2s; }
+.bulb:nth-child(3n) { --bulb-color:#ff5577; --bulb-glow:#ff5577; }
+.bulb:nth-child(3n + 1) { --bulb-color:#5de6ff; --bulb-glow:#5de6ff; }
+.bulb:nth-child(3n + 2) { --bulb-color:#ffe36e; --bulb-glow:#ffe36e; }
+@keyframes bulbBreathe { 0%,100% { opacity:.62; filter:brightness(.85); box-shadow:0 0 7px 2px var(--bulb-glow,#ffe36e); } 50% { opacity:1; filter:brightness(1.55); box-shadow:0 0 17px 7px var(--bulb-glow,#ffe36e),0 0 28px 10px color-mix(in srgb,var(--bulb-glow,#ffe36e) 45%,transparent); } }
+.b1 { left: 48%; top: 32%; } .b2 { left: 30%; top: 55%; } .b3 { left: 66%; top: 58%; } .b4 { left: 20%; top: 68%; } .b5 { left: 76%; top: 73%; } .b6 { left: 40%; top: 80%; } .b7 { left: 57%; top: 88%; }
+.star-top { position:absolute; left: 50%; top: -31px; width: 48px; height: 48px; margin-left:-24px; transform: translateZ(34px); opacity:.2; transition: opacity 1s; filter: drop-shadow(0 0 10px #fff8b0); }
+.star-top::before { content:"✦"; display:block; color:#fff7bf; font-size:48px; text-align:center; }
+.light-string { position:absolute; inset: 12% 8% 8%; border: 2px dotted #fff9c9; border-radius: 48%; transform: translateZ(17px); opacity:0; filter: drop-shadow(0 0 7px white); transition: opacity 1.5s; }
+.snow-ground { position:absolute; bottom: 0; left: 50%; width: 390px; height: 92px; margin-left:-195px; border-radius:50%; transform: rotateX(68deg) translateZ(-36px); background: radial-gradient(ellipse,#fff 0%,#eafff0 28%,#d8f8e4 46%,transparent 72%); filter: blur(8px); opacity:.7; }
+.flake { position:absolute; z-index:3; top:55%; left:50%; font-size:90px; color:white; text-shadow:0 0 12px white; opacity:0; transform:translate(-50%,-50%) scale(.5) rotate(-40deg); transition:all 1.5s ease 1.3s; pointer-events:none; }
+.tree-treasure { position:absolute; z-index:6; font-size:30px; line-height:1; cursor:pointer; user-select:none; filter:drop-shadow(0 3px 5px #000b) drop-shadow(0 0 8px #ffe7a0aa); opacity:0; transform:translateY(12px) scale(.7); transition:opacity 1s ease 1.8s,transform 1s cubic-bezier(.2,.8,.2,1) 1.8s; animation:treasureBob 3s ease-in-out infinite; }
+.tree-treasure:focus-visible { outline:2px solid #fff3c4; outline-offset:5px; border-radius:8px; }
+.treasure-a { left:10%; bottom:13%; }.treasure-b { right:9%; bottom:17%; animation-delay:.5s; }.treasure-c { left:23%; bottom:4%; font-size:25px; animation-delay:1s; }.treasure-d { right:23%; bottom:5%; font-size:25px; animation-delay:1.4s; }
+.treasure-note { position:absolute; z-index:7; left:50%; bottom:1%; transform:translate(-50%,10px); width:max-content; max-width:90%; padding:8px 13px; border:1px solid #f4dfad88; border-radius:20px; background:#07160fe8; color:#fff0c8; font-size:11px; letter-spacing:.06em; opacity:0; pointer-events:none; transition:opacity .35s,transform .35s; }
+.treasure-note.show { opacity:1; transform:translate(-50%,0); }
+@keyframes treasureBob { 50% { translate:0 -7px; } }
+.greeting { z-index:4; text-align:center; opacity:0; transform:translateY(12px); transition:all 1s ease 2s; text-shadow:0 0 16px #c8ffd9; min-height:75px; }
+.greeting h2 { margin:0 0 8px; font-size:clamp(22px,5vw,29px); font-weight:500; letter-spacing:.12em; }
+.greeting p { margin:0; color:#e1f8e7; font-size:12px; line-height:1.8; letter-spacing:.06em; }
+.controls { z-index:5; display:flex; align-items:center; gap:12px; margin-top:auto; padding-top:12px; }
+button { border:1px solid #e7ffe6aa; border-radius:999px; padding:12px 24px; background:#ffffff12; color:#f7fff7; font:inherit; letter-spacing:.13em; cursor:pointer; backdrop-filter:blur(10px); box-shadow:0 0 24px #baffcb22; }
+button:hover { background:#dfffe629; }
+.music-select { border:1px solid #e7ffe6aa; border-radius:999px; padding:11px 14px; background:#102318; color:#f7fff7; font:inherit; font-size:12px; letter-spacing:.04em; outline:none; }
+.music-select option { background:#102318; color:#f7fff7; }
+.note { z-index:2; margin-top:12px; font-size:10px; letter-spacing:.12em; color:#d6e8d9aa; }
+.gift-intro { position:absolute; z-index:20; inset:0; display:grid; place-items:center; padding:24px; background:radial-gradient(ellipse at 50% 42%,#173c2a 0%,#07140e 48%,#020504 100%); transition:opacity 1.1s ease,visibility 1.1s ease; }
+.gift-intro.opened { opacity:0; visibility:hidden; pointer-events:none; }
+.gift-content { text-align:center; max-width:340px; }
+.gift-kicker { color:#e7d5a1; font-size:10px; letter-spacing:.42em; margin-bottom:26px; }
+.gift-box { position:relative; width:148px; height:118px; margin:0 auto 34px; cursor:pointer; filter:drop-shadow(0 18px 24px #000b); animation:giftFloat 3s ease-in-out infinite; }
+.gift-base { position:absolute; left:9px; right:9px; bottom:0; height:82px; background:linear-gradient(100deg,#7c1828,#c63d49 48%,#761525); border:1px solid #f2c879; border-radius:5px 5px 10px 10px; }
+.gift-lid { position:absolute; z-index:2; left:0; top:20px; width:148px; height:27px; border:1px solid #f8d98e; border-radius:5px; background:linear-gradient(90deg,#8c1d2b,#d94b55,#861b2a); transform-origin:12% 100%; transition:transform .9s cubic-bezier(.2,.8,.2,1); }
+.gift-ribbon { position:absolute; z-index:3; left:65px; top:20px; bottom:0; width:19px; background:linear-gradient(90deg,#d5ad62,#fff0b7,#b8873e); }
+.gift-bow { position:absolute; z-index:4; top:0; left:48px; width:52px; height:28px; }
+.gift-bow:before,.gift-bow:after { content:""; position:absolute; width:27px; height:19px; border:5px solid #f2d18c; border-radius:80% 80% 10% 80%; }
+.gift-bow:before { left:0; transform:rotate(22deg); }.gift-bow:after { right:0; transform:scaleX(-1) rotate(22deg); }
+
+.gift-title { color:#fff8e6; font-family:var(--site-font-heading); font-size:clamp(32px,8vw,45px); font-style:italic; text-shadow:0 0 20px #e7c87988; }
+.gift-copy { color:#d8e9d9; font-size:12px; letter-spacing:.12em; margin:12px 0 24px; }
+.gift-open { border:1px solid #e7d19a; color:#fff2cf; background:#ffffff0d; padding:12px 28px; }
+@keyframes giftFloat { 50% { transform:translateY(-9px) rotate(1deg); } }
+#app.lit .bulb { opacity:1; background:radial-gradient(circle at 30% 25%,#fff 0 8%,#fff 15%,var(--bulb-color,#ffe36e) 48%,color-mix(in srgb,var(--bulb-color,#ffe36e) 55%,#321b18) 100%); animation:bulbBreathe 2.2s ease-in-out infinite; }
+#app.theme-jingle .bulb { --bulb-color:#ffd36a; --bulb-glow:#ffb938; }
+#app.theme-wewish .bulb:nth-child(odd) { --bulb-color:#ff6677; --bulb-glow:#ff5268; }
+#app.theme-wewish .bulb:nth-child(even) { --bulb-color:#70f0a1; --bulb-glow:#48e98a; }
+#app.theme-deck .bulb { --bulb-color:#ffbd63; --bulb-glow:#ff9e36; }
+#app.theme-silent .bulb { --bulb-color:#a8dcff; --bulb-glow:#78c6ff; }
+#app.theme-silent.lit .bulb { animation-duration:4s; }
+#app.lit .tree-treasure { opacity:1; transform:translateY(0) scale(1); }
+#app.lit .star-top, #app.lit .light-string { opacity:1; }
+#app.lit .flake { opacity:.9; transform:translate(-50%,-50%) scale(1) rotate(0); }
+#app.lit .greeting { opacity:1; transform:translateY(0); }
+@media (max-width:520px) { .stage { height:56vh; min-height:360px; } .world { transform:scale(.86) rotateX(-8deg) rotateY(-24deg); } .auto .world { animation: none; } }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; } }
+
+/* Scene composition and independent scale keep dragging stable on small screens. */
+.scene { width:100%; max-width:960px; padding:38px 24px 26px; }
+.heading { padding-top:12px; text-shadow:0 0 28px #f6e5ac44; }
+.script { font-size:clamp(48px,8vw,74px); color:#fff4d6; }
+.subtitle { margin-top:18px; font-size:9px; letter-spacing:.48em; color:#e5d3ab; }
+.stage { height:480px; min-height:480px; width:min(100%,560px); touch-action:pan-y; }
+.world { scale:.9; }
+.cone { clip-path:polygon(50% 0,62% 22%,59% 22%,75% 42%,70% 41%,88% 65%,80% 63%,100% 96%,85% 100%,72% 95%,58% 100%,44% 96%,29% 100%,14% 95%,0 97%,20% 64%,12% 65%,30% 41%,25% 42%,41% 22%,38% 22%); background:repeating-linear-gradient(113deg,transparent 0 9px,#c9f6b311 10px,transparent 12px 22px),linear-gradient(105deg,#042d25,#136a46 28%,#4e9a63 48%,#1b714a 65%,#032d24); }
+.cone::after { inset:15% 0 0; height:auto; border-radius:0; background:repeating-conic-gradient(from 158deg at 50% 0%,transparent 0deg 8deg,#bbefad16 9deg 10deg,transparent 11deg 18deg); filter:none; opacity:.8; }
+.snow-rim { border-bottom-width:4px; opacity:.55; filter:drop-shadow(0 0 2px #d2ffe5); }
+.flake { display:none; }
+.light-string { display:none; }
+.garland { position:absolute; left:12%; width:76%; height:32%; top:46%; border-bottom:2px solid #d9b768; border-radius:0 0 50% 50%; transform:rotate(-11deg) translateZ(23px); opacity:.4; filter:drop-shadow(0 0 2px #ffd46e); transition:opacity .8s; }
+.garland::after { content:""; position:absolute; inset:0; border-bottom:3px dotted #ffeab5; border-radius:inherit; }
+.ornament { position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:radial-gradient(circle at 30% 25%,#fff9 0 5%,transparent 18%),radial-gradient(circle at 35% 32%,var(--color),#351717); box-shadow:2px 4px 6px #0007; transform:translateZ(27px); }
+.ornament::before { content:""; position:absolute; width:5px; height:4px; left:calc(50% - 2px); top:-3px; background:#d4b16b; border-radius:1px; }
+.bulb { width:7px; height:7px; transform:translateZ(30px); }
+#app.lit .tier .bulb { animation-delay:var(--delay); animation-fill-mode:backwards; transition-delay:var(--delay); }
+#app.lit .garland { opacity:1; transition-delay:var(--delay); }
+.t4 { --delay:0s; }.t3 { --delay:.35s; }.t2 { --delay:.7s; }.t1 { --delay:1.05s; }
+.star-top { width:42px; height:42px; margin-left:-21px; top:-27px; }
+.star-top::before { content:"★"; font-size:42px; }
+#app.lit .star-top { transition-delay:1.35s; filter:drop-shadow(0 0 14px #ffe8a0); }
+.greeting { min-height:110px; transition-delay:1.6s; }
+.greeting h2 { color:#fff1d3; font-size:25px; }
+.greeting p { color:#d7e4dc; line-height:2; }
+.controls { margin-top:8px; padding:0; justify-content:center; }
+#light { min-width:180px; border-color:#d5b87899; color:#fff1d1; background:linear-gradient(135deg,#ad854c33,#ffffff08); font-size:13px; }
+.note { margin-top:16px; font-size:9px; letter-spacing:.15em; }
+.utility { position:absolute; z-index:8; top:22px; right:24px; display:flex; gap:8px; align-items:center; }
+.utility button { min-height:40px; padding:9px 13px; font-size:11px; letter-spacing:.02em; background:#061711a8; }
+#reset { font-size:21px; width:40px; padding:3px; }
+.music-select { max-width:170px; min-height:40px; padding:8px 11px; font-size:11px; background:#071b15c9; border-color:#dfc99555; }
+.gift-intro { position:fixed; transition:opacity .85s ease,visibility .85s; }
+.gift-intro.unwrapping .gift-box { animation:none; }
+
+
+
+.gift-intro.unwrapping .gift-base { box-shadow:0 -30px 90px 20px #ffe1a477; transition:box-shadow .6s; }
+.burst { position:fixed; inset:0; z-index:30; pointer-events:none; overflow:hidden; }
+.spark { position:absolute; left:50%; top:46%; color:#ffe8ab; font-size:var(--size); opacity:0; animation:giftSpark 1.8s cubic-bezier(.1,.6,.3,1) both; animation-delay:var(--wait); text-shadow:0 0 10px #ffcb69; }
+@keyframes giftSpark { 0%{opacity:0;transform:translate(0,0) scale(.1);} 15%{opacity:1;} 100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--spin)) scale(.3);} }
+.treasure-note { bottom:0; max-width:94%; width:max-content; white-space:normal; text-align:center; line-height:1.7; }
+.tree-treasure { bottom:10%; }
+.treasure-c,.treasure-d { bottom:3%; }
+@media(min-width:1100px) { .scene { padding-top:30px; } }
+@media(max-width:600px) {
+ .scene { padding:82px 14px 24px; }
+ .utility { top:16px; right:12px; left:12px; justify-content:flex-end; gap:6px; }
+ .music-select { max-width:148px; min-width:0; }
+ .utility button { padding:8px 10px; }
+ .heading { padding-top:2px; }
+ .script { font-size:54px; }
+ .subtitle { font-size:8px; letter-spacing:.32em; }
+ .stage { height:390px; min-height:390px; }
+ .world { scale:.76; transform:rotateX(-8deg) rotateY(-24deg); }
+ .auto .world { animation:gentleTurn 18s ease-in-out infinite; }
+ .greeting { min-height:112px; }
+ .greeting h2 { font-size:23px; }
+ .greeting p { font-size:11px; }
+ .tree-treasure { font-size:25px; }
+ .snow-ground { width:290px; margin-left:-145px; }
+}
+@media(max-width:360px) { .world { scale:.68; } .stage { min-height:360px;height:360px; } .music-select { max-width:126px; } }
+@media(prefers-reduced-motion:reduce) { .spark { display:none; } .world { animation:none!important; } }
+
+.scene { padding-top:84px; }
+@media(min-width:1100px) { .scene { padding-top:76px; } }
+.star.cross::before { height:14px; }.star.cross::after { width:14px; }
+.stars { opacity:.65; }.snow { opacity:.65; }
+#app.lit .tier .bulb { animation:ignite .5s ease both,bulbBreathe 2.8s ease-in-out infinite; animation-delay:var(--delay),calc(var(--delay) + .5s); }
+#app.theme-silent.lit .tier .bulb { animation-duration:.5s,4s; }
+@keyframes ignite { from { opacity:.1; filter:brightness(.3); } to { opacity:1; filter:brightness(1.2); } }
+@media(prefers-reduced-motion:reduce) { #app.lit .tier .bulb { animation:none;opacity:1; } }
+.treasure-note { position:fixed; inset:auto; z-index:50; width:230px; max-width:calc(100vw - 32px); margin:0; padding:12px 16px; border-radius:14px; text-align:left; font-size:12px; line-height:1.8; background:#0a211cf5; box-shadow:0 8px 30px #0004; transform:translateY(5px); transition:opacity .2s,transform .2s; }
+.treasure-note.show { transform:translateY(0); }
+.wish-space { width:100%; position:relative; height:0; flex-shrink:0; }
+.wish-space .treasure-note { position:absolute; top:8px; }
+.tree-treasure[aria-expanded="true"] { filter:drop-shadow(0 0 12px #ffe2a6); }
+
+/* Foliage and its decorations share one clipped surface and one rotation plane. */
+.tier { --foliage-shape:polygon(50% 0,62% 22%,59% 22%,75% 42%,70% 41%,88% 65%,80% 63%,100% 96%,85% 100%,72% 95%,58% 100%,44% 96%,29% 100%,14% 95%,0 97%,20% 64%,12% 65%,30% 41%,25% 42%,41% 22%,38% 22%); }
+.foliage-surface { position:absolute; inset:0; transform-style:flat; clip-path:var(--foliage-shape); }
+.foliage-surface .cone { clip-path:var(--foliage-shape); }
+.foliage-surface .garland { transform:rotate(-11deg); }
+.foliage-surface .bulb,.foliage-surface .ornament { transform:none; }
+.foliage-surface .snow-rim { transform:none; bottom:3%; height:8%; border-left:0; border-right:0; border-bottom-width:2px; opacity:.4; }
+
+
+.wish-status { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+
+/* Keep the opening scene anchored to the viewport and the lid assembled. */
+html { scrollbar-gutter:stable; }
+body.intro-active { overflow:hidden; height:100dvh; }
+.gift-top { position:absolute; inset:0; z-index:4; transform-origin:18px 47px; transition:transform .9s cubic-bezier(.2,.8,.2,1); }
+.gift-lid { transition:none; }
+.gift-lid::after { content:""; position:absolute; left:64px; top:0; bottom:0; width:19px; background:linear-gradient(90deg,#d5ad62,#fff0b7,#b8873e); }
+.gift-intro.unwrapping .gift-top { transform:translate(-24px,-78px) rotate(-26deg); }
+.spark { left:var(--burst-x,50%); top:var(--burst-y,46%); }
+@media(max-height:540px) { .gift-intro { overflow-y:auto; } .gift-content { padding:20px 0; } .gift-kicker { margin-bottom:12px; } .gift-box { margin-bottom:18px; } }
+
+.gift-ribbon { top:36px; } .gift-kicker { transition:opacity .25s; } .gift-intro.unwrapping .gift-kicker { opacity:0; } 
+/* The entire tree rotates as one assembled surface, including its star and trunk. */
+.tree3d { transform-style:flat; }
+.tree3d > .tier,.tree3d > .trunk,.tree3d > .star-top { transform:none; }
+.tree3d > .tier { transform-style:flat; }
+.tree3d > .tier::before { display:none; }
+.tree3d > .trunk { z-index:0; }
+.tree3d > .tier { z-index:1; }
+.tree3d > .t1 { z-index:5; } .tree3d > .t2 { z-index:4; } .tree3d > .t3 { z-index:3; } .tree3d > .t4 { z-index:2; } .tree3d > .star-top { z-index:6; }
+/* Geometry is projected inside the canvas; CSS never flattens the model during rotation. */
+.world,.auto .world { transform:none!important; animation:none!important; }
+.tree3d { display:none; }
+.volume-tree { position:absolute; left:-70px; top:-45px; width:440px; height:540px; pointer-events:none; }
+.world { z-index:2; } .snow-ground { z-index:1; opacity:.5; } /* Soft opaque snow replaces the translucent ground glow. */
+.snow-ground {
+ width:min(92%,460px); height:92px; left:50%; bottom:-4px; margin-left:0;
+ transform:translateX(-50%); opacity:1; filter:none; pointer-events:none;
+ border-radius:49% 51% 47% 53% / 48% 48% 52% 52%;
+ background:radial-gradient(ellipse at 50% 34%,#8ea9c444 0%,#bacedd22 17%,transparent 37%),linear-gradient(174deg,#fff 0%,#f9fcff 43%,#e5eef8 79%,#cbdcee 100%);
+ box-shadow:0 8px 26px #06183133,0 0 22px #eaf7ff1a;
+ mask-image:radial-gradient(ellipse closest-side at 50% 50%,#000 0 86%,#0009 94%,transparent 100%);
+}
+.snow-ground::before {
+ content:""; position:absolute; left:4%; top:2%; width:72%; height:46%;
+ border-radius:50% 60% 45% 55%; background:linear-gradient(170deg,#fff 12%,#f7fbff 68%,#dfebf566);
+ box-shadow:0 5px 8px #a5c3dc13;
+}
+.snow-ground::after {
+ content:""; position:absolute; left:22%; right:1%; bottom:11%; height:41%;
+ border-radius:60% 40% 58% 42%; background:radial-gradient(ellipse at 36% 12%,#7894b02b,transparent 32%),linear-gradient(174deg,#ffffffa6,#eaf3fc80);
+ box-shadow:0 -2px 7px #ffffff55;
+}
+@media(max-width:600px) { .snow-ground { width:96%; height:76px; bottom:0; } }
+@media(max-width:360px) { .snow-ground { height:66px; } }
+/* Original screen-space spectral afterglow. */
+.meteor-trail-layer { position:fixed; inset:0; z-index:39; pointer-events:none; overflow:hidden; }
+.meteor-trace { position:absolute; width:72px; height:2px; border-radius:50%; transform-origin:left center; transform:rotate(-7deg); background:linear-gradient(90deg,#fff0bc99,#ffbcd88c 30%,#adcfff88 65%,transparent); box-shadow:0 0 7px #d5bfff44; filter:blur(.5px); animation:meteorTraceFade .8s ease-out forwards; }
+@keyframes meteorTraceFade { from { opacity:.55; } to { opacity:0; } }
+/* A brief wish pulse and short-lived spectral afterglow. */
+#light.wishing { animation:wishButtonGlow 1.15s ease-out; }
+@keyframes wishButtonGlow {
+ 0% { box-shadow:0 0 8px #ffe9b566,inset 0 0 8px #fff2cf22; }
+ 18% { border-color:#fff1be; color:#fffbed; background-color:#e2b76b33; box-shadow:0 0 20px #ffe0a699,0 0 48px #efb77855,inset 0 0 18px #fff0ba44; }
+ 100% { box-shadow:0 0 24px #baffcb22; }
+}
+@media(prefers-reduced-motion:reduce) {
+ #light.wishing { animation:none!important; box-shadow:0 0 20px #ffe0a680,inset 0 0 10px #fff0ba33; }
+}
+
+
+/* Opening choreography: gift light expands, then the winter scene comes into focus. */
+.scene { opacity:1; transform:none; filter:none; transition:opacity 1.4s ease,transform 1.7s cubic-bezier(.2,.65,.2,1),filter 1.4s ease; }
+.scene.awaiting-reveal { opacity:0; transform:translateY(22px) scale(.97); filter:blur(5px); }
+.gift-content { transition:opacity .65s ease,filter .65s ease; }
+.gift-intro.departing .gift-content { opacity:0; filter:blur(3px); }
+.portal-light { position:fixed; left:var(--portal-x); top:var(--portal-y); width:180vmax; height:180vmax; border-radius:50%; z-index:25; pointer-events:none; opacity:0; background:radial-gradient(circle,#fff8df 0%,#ffedc6cc 12%,#efc88966 28%,#d4e5ee22 48%,transparent 68%); animation:giftToWinter 2.3s cubic-bezier(.2,.65,.2,1) both; }
+@keyframes giftToWinter {
+ 0% { opacity:0; transform:translate(-50%,-50%) scale(.015); }
+ 18% { opacity:.8; transform:translate(-50%,-50%) scale(.12); }
+ 44% { opacity:.88; transform:translate(-50%,-50%) scale(.8); }
+ 65% { opacity:.45; transform:translate(-50%,-50%) scale(1); }
+ 100% { opacity:0; transform:translate(-50%,-50%) scale(1.08); }
+}
+@media(prefers-reduced-motion:reduce) {
+ .scene.awaiting-reveal { transform:none; filter:none; }
+ .portal-light { display:none; }
+ .gift-intro.departing .gift-content { filter:none; }
+}
+
+
+
+/* The snow extends behind the foreground copy, which uses a readable winter ink. */
+.greeting { text-shadow:0 1px 12px #fff8; }
+.greeting h2 { color:#254858; }
+.greeting p { color:#456070; }
+#light { color:#284c5c; border-color:#678ba580; background:linear-gradient(135deg,#fff9,#eaf4ff88); box-shadow:0 4px 22px #587e9c1f; }
+#light.wishing { color:#fff7dc; }
+.note { color:#4d6c7dcc; }
+@keyframes wishButtonGlow {
+ 0% { box-shadow:0 0 8px #ffe9b566; }
+ 18% { color:#765a25; border-color:#d1a45d; background-color:#fff0c9; box-shadow:0 0 20px #ffe0a699,0 0 48px #efb77855,inset 0 0 18px #fff0ba44; }
+ 100% { box-shadow:0 4px 22px #587e9c1f; }
+}
+
+.scene { touch-action:pan-y; } 
+/* Reserve a complete viewport for the card; the tree scales to the remaining stage height. */
+.scene { height:100svh; min-height:560px; padding:66px 16px 16px; }
+.heading { padding-top:0; flex-shrink:0; }
+.script { font-size:clamp(36px,7svh,60px); }
+.subtitle { margin-top:10px; font-size:8px; }
+.stage { flex:1 1 0; height:auto; min-height:0; margin:8px 0 0; }
+.greeting { min-height:0; flex-shrink:0; }
+.greeting h2 { margin:0 0 6px; font-size:clamp(20px,3svh,25px); }
+.greeting p { font-size:11px; line-height:1.8; }
+.controls { flex-shrink:0; margin-top:12px; padding:0; }
+#light { padding:10px 24px; min-height:40px; }
+.note { flex-shrink:0; margin-top:10px; font-size:9px; }
+.tree-treasure { bottom:10%; }
+.treasure-c,.treasure-d { bottom:2%; }
+@media(max-height:650px) {
+ .scene { padding-top:60px; padding-bottom:10px; }
+ .script { font-size:36px; }
+ .subtitle { margin-top:6px; }
+ .greeting h2 { font-size:19px; }
+ .greeting p { font-size:10px; }
+ .controls { margin-top:8px; }
+ .note { margin-top:6px; font-size:8px; }
+}
+
+.world { top:-16px; } 
+/* Only the glyphs are foreground; the sky remains continuous behind them. */
+.heading { position:relative; z-index:10; isolation:auto; background:none; }
+.utility { z-index:11; }
+.volume-tree { top:-260px; }
+#app::after { display:none; }
+
+.panoramic-sky { position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+.scene { z-index:1; }
+.stars { display:none; }
+
+#app .model-treasure { width:42px; height:42px; min-height:0; margin:0; padding:0; bottom:auto; right:auto; transform:translate(-50%,-50%); translate:none; animation:none; transition:none; opacity:1; background:transparent; border:0; border-radius:50%; filter:none; }
+.model-treasure:hover,.model-treasure:focus-visible { outline:1px solid #f8e3aa99; outline-offset:2px; }
+.wish-status { position:fixed; top:0; left:0; } /* Scene text stays unselectable while dragging or interacting. */ html, body, body *, body *::before, body *::after { -webkit-user-select:none; user-select:none; -webkit-user-drag:none; } 
+/* Original screen-space meteor wishes. */
+.wish-danmaku { position:fixed; inset:0; z-index:40; pointer-events:none; overflow:hidden; }
+.danmaku-line { position:absolute; top:var(--lane-y); left:100%; width:max-content; max-width:none; white-space:nowrap; font-weight:500; letter-spacing:.09em; color:var(--wish-color); opacity:0; will-change:transform; animation:wishFly var(--fly-time) linear var(--fly-delay) forwards; }
+@keyframes wishFly { 0% { opacity:0; transform:translateX(0); } 4%,92% { opacity:.95; } 100% { opacity:0; transform:translateX(calc(-100vw - 100%)); } }
+@media(prefers-reduced-motion:reduce) { .danmaku-line { left:50%; max-width:90%; white-space:normal; text-align:center; transform:translateX(-50%); animation:none!important; opacity:1; background:#071b15e8; padding:8px 14px; border-radius:12px; font-size:14px; } }
+
+/* A small luminous head and a fading trail carry the wish, without a solid meteor. */
+.danmaku-line { padding:5px 24px 16px 15px; font-size:clamp(14px,2.3vw,19px); font-weight:400; letter-spacing:.08em; transform-origin:left bottom; animation-name:meteorWishFly; text-shadow:0 1px 5px #03120eee,0 0 12px #fff4cc55; }
+.meteor-wish-text { position:relative; z-index:1; }
+.danmaku-line::before { content:""; position:absolute; left:0; bottom:7px; width:5px; height:5px; margin:0; border-radius:50%; background:#fff9e8; box-shadow:0 0 6px 2px #fff5d6aa,0 0 18px 4px #d5ebff44; }
+.danmaku-line::after { content:""; position:absolute; left:2px; bottom:8px; width:calc(100% + 100px); height:1.5px; border-radius:50%; background:linear-gradient(90deg,#fff9dfcc 0%,var(--wish-color) 12%,#d5e7f244 55%,transparent 100%); box-shadow:0 1px 9px #dbefff33; }
+@keyframes meteorWishFly {
+ 0% { opacity:0; transform:translate(0,-35px) rotate(-7deg); }
+ 7% { opacity:.92; }
+ 87% { opacity:.92; }
+ 100% { opacity:0; transform:translate(calc(-100vw - 100% - 160px),75px) rotate(-7deg); }
+}
+@media(max-width:520px) { .danmaku-line::after { width:calc(100% + 60px); } }
+@media(prefers-reduced-motion:reduce) {
+ .danmaku-line { transform:translateX(-50%); padding:8px 14px; }
+ .danmaku-line::before,.danmaku-line::after { display:none; }
+}
+.meteor-trail-anchor { position:absolute; left:0; bottom:7px; width:5px; height:5px; pointer-events:none; }
+.danmaku-line::after { height:2px; background:linear-gradient(90deg,#fff3cce6,#ffe0b6b3 15%,#ffc0d68c 35%,#b7ceff66 63%,#bcefe62b 83%,transparent); box-shadow:0 0 10px #d2bcff55; }
+@media(prefers-reduced-motion:reduce) {
+ #light.wishing { animation:none!important; box-shadow:0 0 20px #ffe0a680,inset 0 0 10px #fff0ba33; }
+ .meteor-trail-layer { display:none; }
+}
+
+
+/* Two flat layers retain the original animation, with ordinary canvas occlusion. */
+.wish-danmaku.distant-wishes,.meteor-trail-layer.distant-wishes { z-index:0; }
+.danmaku-line { font-size:calc(clamp(14px,2.3vw,19px) * var(--distance-scale,1)); }
+.danmaku-line[data-depth="far"] { filter:brightness(.88); }
+@media(prefers-reduced-motion:reduce) { .danmaku-line { font-size:14px; } }
+
+</style>
+</head>
+<body class="intro-active">
+<main id="app" class="auto">
+  <section class="scene" aria-label="可交互的立体圣诞贺卡"><div class="utility"><select class="music-select" id="songSelect" aria-label="选择圣诞音乐"><option value="jingle">铃儿响叮当</option><option value="wewish">祝你圣诞快乐</option><option value="sugarplum">胡桃夹子·糖梅仙子</option></select><button id="music">♫ 播放音乐</button><button id="reset" aria-label="重置视角" title="重置视角">↺</button></div>
+    <div class="gift-intro" id="giftIntro"><div class="gift-content"><div class="gift-kicker">A SMALL GIFT, JUST FOR YOU</div><div class="gift-box" aria-hidden="true"><div class="gift-base"></div><div class="gift-ribbon"></div><div class="gift-top"><div class="gift-lid"></div><div class="gift-bow"></div></div></div><div class="gift-title">A Winter Wish</div><div class="gift-copy">这个冬天，想送你一点小小的惊喜</div><button class="gift-open" id="openGift">拆开这份礼物 ✦</button></div></div>
+    <div class="stars" id="stars"></div><div class="snow" id="snow"></div>
+    <header class="heading"><div class="script">Merry<br>Christmas</div><div class="subtitle">A LITTLE WISH FOR YOU</div></header>
+    <div class="stage" id="stage" aria-label="拖动环绕观察圣诞树与雪原">
+      <div class="world" id="world"><div class="tree3d">
+        <div class="trunk"></div>
+        <div class="tier t1"><div class="cone"></div><div class="snow-rim"></div><i class="bulb b1"></i></div>
+        <div class="tier t2"><div class="cone"></div><div class="snow-rim"></div><i class="bulb b2"></i><i class="bulb b3"></i></div>
+        <div class="tier t3"><div class="cone"></div><div class="snow-rim"></div><i class="bulb b4"></i><i class="bulb b5"></i></div>
+        <div class="tier t4"><div class="cone"></div><div class="snow-rim"></div><i class="bulb b6"></i><i class="bulb b7"></i></div>
+        <div class="light-string"></div><div class="star-top"></div>
+      </div></div>
+      <div class="flake">❄</div>
+      <div class="tree-treasure treasure-a" role="button" tabindex="0" data-wish="拆开这份小礼物：愿你总有期待，也总有惊喜。" aria-label="打开左边的小礼物">🎁</div>
+      <div class="tree-treasure treasure-b" role="button" tabindex="0" data-wish="这颗糖果送给你：愿生活一直甜甜的。" aria-label="收下圣诞糖果">🍬</div>
+      <div class="tree-treasure treasure-c" role="button" tabindex="0" data-wish="叮咚！愿好运像铃声一样，悄悄来到你身边。" aria-label="摇响圣诞铃铛">🔔</div>
+      <div class="tree-treasure treasure-d" role="button" tabindex="0" data-wish="找到一颗小星星：愿你走过的每一步都有光。" aria-label="收集一颗星星">⭐</div>
+      <div class="treasure-note" id="treasureNote" aria-live="polite"></div>
+    </div>
+    <div class="greeting"><h2>愿你圣诞快乐</h2><p>愿冬日的温柔与星光常伴你左右<br>新的一年，平安喜乐，万事胜意。</p></div>
+    <div class="controls"><button id="light">✦ 许一个愿望</button></div>
+    <div class="note">拖动探索雪原视角 · DRAG TO EXPLORE</div>
+  </section>
+</main>
+<script>
+const stars=document.getElementById('stars'), snow=document.getElementById('snow');
+for(let i=0;i<90;i++){const s=document.createElement('i');s.className='star'+(i%15===0?' cross':'');s.style.setProperty('--size',`${1+Math.random()*3}px`);s.style.setProperty('--duration',`${1.4+Math.random()*3.8}s`);s.style.left=`${Math.random()*100}%`;s.style.top=`${Math.random()*100}%`;s.style.animationDelay=`${Math.random()*4}s`;stars.appendChild(s);}
+for(let i=0;i<42;i++){const f=document.createElement('span');f.className='snowflake';f.textContent=['❄','❅','❆'][i%3];f.style.left=`${Math.random()*100}%`;f.style.fontSize=`${9+Math.random()*8}px`;f.style.setProperty('--duration',`${11+Math.random()*14}s`);f.style.setProperty('--drift',`${-42+Math.random()*84}px`);f.style.opacity=`${.48+Math.random()*.42}`;f.style.animationDelay=`${Math.random()*18}s`;snow.appendChild(f);}
+const app=document.getElementById('app'),stage=document.getElementById('stage'),world=document.getElementById('world');
+const giftIntro=document.getElementById('giftIntro');
+const scene=document.querySelector('.scene');
+document.body.appendChild(giftIntro);
+scene.inert=true;
+scene.classList.add('awaiting-reveal');
+const tracks={jingle:'music/铃儿响叮当.mp3',wewish:'music/祝你圣诞快乐.mp3',sugarplum:'music/胡桃夹子-糖梅仙子.mp3'};
+const player=document.createElement('audio'); player.id='backgroundMusic'; player.hidden=true; player.setAttribute('playsinline',''); document.body.appendChild(player);
+player.loop=true;
+player.preload='auto';
+player.volume=.45;
+let musicOn=false,playRequest=0;
+const musicButton=document.getElementById('music');
+const songSelect=document.getElementById('songSelect');
+function applySongTheme(song){app.classList.remove('theme-jingle','theme-wewish','theme-deck','theme-silent');app.classList.add('theme-'+(song==='sugarplum'?'silent':song));}
+function selectTrack(){player.src=tracks[songSelect.value];applySongTheme(songSelect.value);}
+selectTrack();
+async function startMusic(){
+  const request=++playRequest;
+  musicOn=true;
+  musicButton.textContent='♫ 加载音乐…';
+  try{
+    await player.play();
+    if(request!==playRequest)return;
+    musicButton.textContent='♫ 暂停音乐';
+  }catch(error){
+    if(request!==playRequest)return;
+    musicOn=false;
+    musicButton.textContent='♫ 点击重试';
+  }
+}
+function stopMusic(){++playRequest;musicOn=false;player.pause();musicButton.textContent='♫ 播放音乐';}
+player.addEventListener('error',()=>{++playRequest;musicOn=false;musicButton.textContent='♫ 音乐加载失败，点击重试';});
+musicButton.addEventListener('click',()=>musicOn?stopMusic():startMusic());
+songSelect.addEventListener('change',()=>{const resume=musicOn;stopMusic();selectTrack();if(resume)startMusic();});
+document.getElementById('openGift').addEventListener('click',()=>{if(giftIntro.classList.contains('unwrapping'))return;
+const giftBox=giftIntro.querySelector('.gift-box');
+const frozenTransform=getComputedStyle(giftBox).transform;
+giftBox.style.transform=frozenTransform;
+const giftBounds=giftBox.getBoundingClientRect();
+giftIntro.classList.add('unwrapping');
+document.getElementById('openGift').disabled=true;
+if(!musicOn)startMusic();
+const origin={x:giftBounds.left+giftBounds.width/2,y:giftBounds.top+giftBounds.height*.3};
+const reducedOpening=matchMedia('(prefers-reduced-motion:reduce)').matches;
+if(!reducedOpening)burstStars(origin);
+const glow=document.createElement('div');
+glow.className='portal-light';glow.setAttribute('aria-hidden','true');
+glow.style.setProperty('--portal-x',origin.x+'px');glow.style.setProperty('--portal-y',origin.y+'px');
+setTimeout(()=>document.body.appendChild(glow),reducedOpening?0:320);
+setTimeout(()=>giftIntro.classList.add('departing'),reducedOpening?0:650);
+setTimeout(()=>{
+ giftIntro.classList.add('opened');
+ scene.classList.remove('awaiting-reveal');
+},reducedOpening?50:950);
+setTimeout(()=>app.classList.add('lit'),reducedOpening?100:1750);
+setTimeout(()=>{
+ document.body.classList.remove('intro-active');
+ scene.inert=false;
+ document.getElementById('light').focus({preventScroll:true});
+ glow.remove();
+},reducedOpening?150:2750);
+});
+
+
+const wishNote=document.getElementById('treasureNote');
+wishNote.className='wish-status';
+document.body.appendChild(wishNote);
+let wishAnchor=null;
+function closeWish(){
+ if(wishAnchor)wishAnchor.setAttribute('aria-expanded','false');
+ wishAnchor=null;hideSpatialWish();
+}
+function openTreasure(item){
+ if(wishAnchor)wishAnchor.setAttribute('aria-expanded','false');
+ wishAnchor=item;item.setAttribute('aria-expanded','true');
+ wishNote.textContent=item.dataset.wish;
+ showSpatialWish(item,item.dataset.wish);
+ clearTimeout(openTreasure.timer);openTreasure.timer=setTimeout(closeWish,7000);
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWish();});
+document.querySelectorAll('.tree-treasure').forEach(item=>{item.addEventListener('click',e=>{e.stopPropagation();openTreasure(item);});item.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();openTreasure(item);}});});
+let dragging=false,lastX=0,lastY=0,ry=-24,rx=-8,activePointer=null;
+function setRotation(){treeView.rx=rx;treeView.ry=ry;}
+scene.addEventListener('pointerdown',e=>{
+ if(e.target.closest('[role="button"],button,select,input,a')||activePointer!==null||!e.isPrimary||e.button!==0)return;
+ dragging=true;activePointer=e.pointerId;lastX=e.clientX;lastY=e.clientY;
+ rx=treeView.rx;
+ ry=treeView.ry;
+ app.classList.remove('auto');setRotation();scene.setPointerCapture(e.pointerId);
+});
+scene.addEventListener('pointermove',e=>{
+ if(!dragging||e.pointerId!==activePointer)return;
+ ry+=(e.clientX-lastX)*.45;
+ rx=Math.max(-12,Math.min(4,rx+(e.clientY-lastY)*.25));
+ lastX=e.clientX;lastY=e.clientY;setRotation();
+});
+function endDrag(e){if(e.pointerId===activePointer){dragging=false;activePointer=null;}}
+scene.addEventListener('pointerup',endDrag);
+scene.addEventListener('pointercancel',endDrag);
+scene.addEventListener('lostpointercapture',endDrag);
+
+let wishGlowTimer;
+document.getElementById('light').addEventListener('click',()=>{
+ const button=document.getElementById('light');
+ button.classList.remove('wishing');void button.offsetWidth;button.classList.add('wishing');
+ clearTimeout(wishGlowTimer);wishGlowTimer=setTimeout(()=>button.classList.remove('wishing'),1200);
+ app.classList.add('lit');sendLuckyWishes();
+});
+document.getElementById('reset').addEventListener('click',()=>{ry=-24;rx=-8;setRotation();app.classList.add('auto');});
+
+function burstStars(origin){
+ const burst=document.createElement('div');burst.className='burst';burst.setAttribute('aria-hidden','true');
+ if(origin){burst.style.setProperty('--burst-x',origin.x+'px');burst.style.setProperty('--burst-y',origin.y+'px');}
+ for(let i=0;i<38;i++){
+  const spark=document.createElement('span');spark.className='spark';spark.textContent=i%3?'✦':'·';
+  const angle=Math.random()*Math.PI*2,reach=90+Math.random()*280;
+  spark.style.setProperty('--dx',Math.cos(angle)*reach+'px');
+  spark.style.setProperty('--dy',Math.sin(angle)*reach+'px');
+  spark.style.setProperty('--spin',Math.random()*360+'deg');
+  spark.style.setProperty('--size',8+Math.random()*15+'px');
+  spark.style.setProperty('--wait',Math.random()*.25+'s');
+  burst.appendChild(spark);
+ }
+ document.body.appendChild(burst);setTimeout(()=>burst.remove(),2300);
+}
+
+
+const luckyWishes=[
+ '愿你所盼皆如愿，所行皆坦途',
+ '好运正在向你奔来',
+ '愿你平安喜乐，万事胜意',
+ '愿你的努力，都有温柔的回响',
+ '新的一年，好事接二连三',
+ '愿你被爱包围，也被幸运偏爱',
+ '愿你逢考必过，所求皆得',
+ '把烦恼清零，把快乐装满',
+ '愿你钱包鼓鼓，心情闪闪发光',
+ '愿每一个明天，都有小小的惊喜',
+ '愿你一路生花，自在明亮',
+ '愿你健康常伴，幸福常在',
+ '所有美好，都在赶来的路上',
+ '愿你有勇气出发，也有好运相随',
+ '愿你抬头遇见星光，转身遇见温暖',
+ '这一次，幸运一定站在你这边'
+];
+
+let wishPool=luckyWishes.map((text,index)=>({id:'generated-'+index,text,origin:'generated'}));
+let lastWishText='';
+const wishesReady=fetch('./祝福素材库.json')
+ .then(response=>{if(!response.ok)throw new Error('Wish library HTTP '+response.status);return response.json();})
+ .then(library=>{
+  if(!Array.isArray(library.items))throw new Error('Invalid wish library');
+  const seen=new Set(wishPool.map(item=>item.text));
+  for(const item of library.items){
+   if(typeof item.text!=='string'||!item.text.trim()||seen.has(item.text.trim()))continue;
+   const text=item.text.trim();seen.add(text);
+   wishPool.push({id:item.id,text,origin:'collected',sourceId:item.source_id});
+  }
+ })
+ .catch(()=>{/* Local generated wishes remain available if the library cannot load. */});
+function pickLuckyWish(){
+ const available=wishPool.filter(item=>item.text!==lastWishText);
+ const chosen=available[Math.floor(Math.random()*available.length)]||wishPool[0];
+ lastWishText=chosen.text;return chosen;
+}
+
+const danmaku=document.createElement('div');
+danmaku.className='wish-danmaku';danmaku.setAttribute('aria-hidden','true');
+document.body.appendChild(danmaku);
+// Far wishes sit between the sky and the existing tree canvas; the tree masks them naturally.
+const distantDanmaku=document.createElement('div');
+distantDanmaku.className='wish-danmaku distant-wishes';distantDanmaku.setAttribute('aria-hidden','true');
+app.appendChild(distantDanmaku);
+const wishStatus=document.createElement('div');
+wishStatus.className='wish-status';wishStatus.setAttribute('role','status');
+document.querySelector('.controls').appendChild(wishStatus);
+
+const trailLayer=document.createElement('div');
+trailLayer.className='meteor-trail-layer';trailLayer.setAttribute('aria-hidden','true');
+document.body.appendChild(trailLayer);
+const distantTrailLayer=document.createElement('div');
+distantTrailLayer.className='meteor-trail-layer distant-wishes';distantTrailLayer.setAttribute('aria-hidden','true');
+app.appendChild(distantTrailLayer);
+function leaveMeteorTrail(line,anchor){
+ if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+ const layer=line.dataset.depth==='far'?distantTrailLayer:trailLayer;
+ let lastTrace=0;
+ function paint(time){
+  if(!line.isConnected)return;
+  if(time-lastTrace>65){
+   lastTrace=time;
+   const box=anchor.getBoundingClientRect(),x=box.left+box.width/2,y=box.top+box.height/2;
+   if(x>-75&&x<innerWidth&&y>0&&y<innerHeight&&layer.childElementCount<200){
+    const trace=document.createElement('i');trace.className='meteor-trace';
+    trace.style.left=x+'px';trace.style.top=y+'px';
+    trace.style.scale=line.dataset.distanceScale||'1';
+    layer.appendChild(trace);
+    trace.addEventListener('animationend',()=>trace.remove(),{once:true});
+    setTimeout(()=>trace.remove(),900);
+   }
+  }
+  requestAnimationFrame(paint);
+ }
+ requestAnimationFrame(paint);
+}
+
+let laneReady=[],wishCursor=0,wishBatch=0;
+async function sendLuckyWishes(){
+ await wishesReady;
+ if(danmaku.childElementCount+distantDanmaku.childElementCount>=24)return;
+ const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ const box=stage.getBoundingClientRect();
+ const top=Math.max(84,Math.min(innerHeight*.2,box.top));
+ const bottom=Math.max(top+100,Math.min(innerHeight-145,box.bottom-30));
+ const lanes=Math.max(2,Math.min(6,Math.floor((bottom-top)/48)));
+ const now=performance.now();
+ if(reduced){danmaku.replaceChildren();distantDanmaku.replaceChildren();}
+ const lane=wishCursor++%lanes,chosen=pickLuckyWish();
+ const line=document.createElement('span');line.className='danmaku-line';
+ const far=!reduced&&Math.random()<.3,distanceScale=far?.7+Math.random()*.12:1+Math.random()*.08;
+ line.dataset.depth=far?'far':'near';line.dataset.distanceScale=String(distanceScale);
+ line.style.setProperty('--distance-scale',String(distanceScale));
+ const text=document.createElement('span');text.className='meteor-wish-text';text.textContent=chosen.text;
+ line.appendChild(text);
+ const anchor=document.createElement('i');anchor.className='meteor-trail-anchor';line.appendChild(anchor);
+ line.addEventListener('animationstart',event=>{if(event.animationName==='meteorWishFly')leaveMeteorTrail(line,anchor);},{once:true});
+ line.dataset.origin=chosen.origin;
+ if(chosen.sourceId)line.dataset.sourceId=chosen.sourceId;
+ line.style.setProperty('--lane-y',(top+lane*(bottom-top)/Math.max(1,lanes-1))+'px');
+ line.style.setProperty('--wish-color',['#fff0bd','#d1f5df','#f9d7df','#d4eaff'][wishBatch%4]);
+ (far?distantDanmaku:danmaku).appendChild(line);
+ const duration=(innerWidth+line.offsetWidth+160)/100;
+ const start=reduced?now:Math.max(now,laneReady[lane]||0),delay=(start-now)/1000;
+ laneReady[lane]=start+(line.offsetWidth+260)/100*1000;
+ line.style.setProperty('--fly-time',duration+'s');line.style.setProperty('--fly-delay',delay+'s');
+ line.addEventListener('animationend',()=>line.remove(),{once:true});
+ setTimeout(()=>line.remove(),reduced?7000:(delay+duration)*1000+200);
+ wishBatch++;document.getElementById('light').textContent='✦ 再许一个愿望';
+ wishStatus.textContent='第'+wishBatch+'份好运祝福已送达，愿你万事胜意。';
+}
+
+
+
+</script>
+<script src="tree-volume.js?v=37"></script>
+</body>
+</html>

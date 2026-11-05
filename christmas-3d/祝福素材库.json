@@ -1,0 +1,350 @@
+{
+  "version": 1,
+  "collected_on": "2026-10-31",
+  "status": "已接入弹幕，与页面内16条生成祝福等概率混合抽取",
+  "notes": [
+    "本文件19条均有外部文本依据，不包含新生成祝福。",
+    "小红书项来自可读取的活动报道，不表示已直接访问原笔记。",
+    "抖音项区分发布文案、标题和评论；不将发布者等同于原创作者。",
+    "古诗词项以作品原句为准，不把网络祝福误署为现代作家原文；本轮未核验现代纸本文集全文。",
+    "仅保留短摘，除标点及换行归一外没有润色；后续改写需单独标注。",
+    "页面从本文件读取素材，与现有生成内容去重混合抽取；每次点击一条，避免相邻两次重复。"
+  ],
+  "sources": [
+    {
+      "id": "xhs-thanks",
+      "platform": "小红书",
+      "title": "小红书新年感谢季文案，太治愈了！",
+      "url": "https://www.10100.com/article/94093378",
+      "evidence": "已读取报道正文；属于活动文案转引，未直接核验原笔记"
+    },
+    {
+      "id": "xhs-fireworks",
+      "platform": "小红书",
+      "title": "小红书「送你一句新年烟花」：祝你心里常放烟花",
+      "url": "https://www.ganhuoku.cn/archives/279173",
+      "evidence": "已读取活动案例正文；未直接核验原笔记，部分句子属平台流传表达"
+    },
+    {
+      "id": "xhs-gifts",
+      "platform": "小红书",
+      "title": "小红书年末上线礼物季，文案写得太对味了",
+      "url": "https://www.4anet.com/p/11v816ecfb575d94",
+      "evidence": "已读取活动报道正文；活动文案转引"
+    },
+    {
+      "id": "dy-kind",
+      "platform": "抖音",
+      "title": "岁月如笔写春秋·祝福话题文案",
+      "url": "https://www.douyin.com/video/7684552942067138035",
+      "evidence": "检索索引可见发布文案；未播放视频"
+    },
+    {
+      "id": "dy-spring",
+      "platform": "抖音",
+      "title": "春分龙抬头，岁月皆温柔",
+      "url": "https://jingxuan.douyin.com/m/video/7619291956628654821",
+      "evidence": "抖音精选公开文案；作者署名为文案自署，未核验首创"
+    },
+    {
+      "id": "dy-road",
+      "platform": "抖音",
+      "title": "愿你所行皆坦途，所遇皆温柔",
+      "url": "https://www.douyin.com/video/7681254159128329651",
+      "evidence": "检索索引可见发布文案；直接打开失败，未核验首创"
+    },
+    {
+      "id": "dy-winter",
+      "platform": "抖音",
+      "title": "古琴｜圣诞快乐劳伦斯先生",
+      "url": "https://jingxuan.douyin.com/m/video/7536898730679733547",
+      "evidence": "检索索引可见视频标题文案；未播放视频"
+    },
+    {
+      "id": "dy-happiness",
+      "platform": "抖音",
+      "title": "此刻 来年 都幸福·新年文案",
+      "url": "https://www.douyin.com/video/7449353313054657811",
+      "evidence": "检索索引可见发布文案；未核验首创"
+    },
+    {
+      "id": "dy-christmas",
+      "platform": "抖音",
+      "title": "平安夜也快乐·公开评论",
+      "url": "https://www.douyin.com/video/7587270771648957755",
+      "evidence": "检索结果展示小汤圆不圆的评论；摘句来自评论，不是视频作者原文"
+    },
+    {
+      "id": "classic-su-moon",
+      "platform": "古诗词作品",
+      "title": "苏轼《水调歌头·明月几时有》",
+      "url": "https://m.guwendao.net/mingju/juv_f907abbd9ffc.aspx",
+      "evidence": "可见古诗原文；只摘古代原作，不引用现代译注"
+    },
+    {
+      "id": "classic-li",
+      "platform": "古诗词作品",
+      "title": "李白《行路难·其一》",
+      "url": "https://licp.cas.cn/hwqf/qfxsjw/202212/t20221229_6591985.html",
+      "evidence": "中国科学院兰州化学物理研究所页面引句并署作者及作品"
+    },
+    {
+      "id": "classic-su-tea",
+      "platform": "古诗词作品",
+      "title": "苏轼《望江南·超然台作》",
+      "url": "https://www.xinhuanet.com/food/20230316/23c343d3fe454d45bbf4eedac04cfd6e/c.html",
+      "evidence": "新华网页面引用作品及原句"
+    },
+    {
+      "id": "classic-zhao",
+      "platform": "古诗词作品",
+      "title": "赵长卿《探春令·笙歌间错华筵启》",
+      "url": "https://www.gushiwen.cn/mingju/juv_4df1aa366089.aspx",
+      "evidence": "可见原词；只摘古代原作"
+    },
+    {
+      "id": "classic-wang",
+      "platform": "古诗词作品",
+      "title": "王勃《送杜少府之任蜀州》",
+      "url": "https://www.gushiwen.cn/mingju/juv.aspx?id=fdf6b01307fd",
+      "evidence": "可见原诗；只摘古代原作"
+    },
+    {
+      "id": "classic-zhang",
+      "platform": "古诗词作品",
+      "title": "张先《江南柳·隋堤远》",
+      "url": "https://m.youdao.com/singledict?dict=baike_detail&more=true&q=%E5%BC%A0%E5%85%88",
+      "evidence": "张先作品条目可见原词；只摘古代原作"
+    }
+  ],
+  "items": [
+    {
+      "id": "collected-001",
+      "text": "祝你想见的人刚好有空",
+      "source_id": "xhs-thanks",
+      "attribution": "夹夹空（据报道署名）",
+      "text_type": "原文短摘",
+      "tags": [
+        "相逢"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-002",
+      "text": "祝你多些自由",
+      "source_id": "xhs-thanks",
+      "attribution": "夹夹空（据报道署名）",
+      "text_type": "原文短摘",
+      "tags": [
+        "自在"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-003",
+      "text": "祝你心里常放烟花",
+      "source_id": "xhs-fireworks",
+      "attribution": "小红书活动表达；首创未核验",
+      "text_type": "原文短摘",
+      "tags": [
+        "快乐"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-004",
+      "text": "勇敢的人先享受世界",
+      "source_id": "xhs-fireworks",
+      "attribution": "平台流传表达；首创未核验",
+      "text_type": "原文短摘",
+      "tags": [
+        "勇气"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-005",
+      "text": "生活的节奏，慢一点；入睡的速度，快一点",
+      "source_id": "xhs-gifts",
+      "attribution": "小红书礼物季文案；具体作者未核验",
+      "text_type": "原文短摘，合并换行并调整标点",
+      "tags": [
+        "安睡"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-006",
+      "text": "愿你全力以赴不留遗憾",
+      "source_id": "dy-kind",
+      "attribution": "发布账号燕姐好物；首创未核验",
+      "text_type": "发布文案短摘",
+      "tags": [
+        "前程"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-007",
+      "text": "愿你晨起有微笑，所遇皆美好",
+      "source_id": "dy-kind",
+      "attribution": "发布账号燕姐好物；首创未核验",
+      "text_type": "发布文案短摘，补标点",
+      "tags": [
+        "日常"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-008",
+      "text": "日日有好运，时时皆欢喜",
+      "source_id": "dy-spring",
+      "attribution": "文案自署老兵；发布账号色即是空gy",
+      "text_type": "原文短摘",
+      "tags": [
+        "好运"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-009",
+      "text": "岁岁平安，身心康健",
+      "source_id": "dy-spring",
+      "attribution": "文案自署老兵；发布账号色即是空gy",
+      "text_type": "原文短摘",
+      "tags": [
+        "平安"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-010",
+      "text": "愿你所行皆坦途，所遇皆温柔",
+      "source_id": "dy-road",
+      "attribution": "平台流传表达；首创未核验",
+      "text_type": "发布文案短摘",
+      "tags": [
+        "顺遂"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-011",
+      "text": "愿你今夜有暖酒，梦里有星光",
+      "source_id": "dy-winter",
+      "attribution": "发布账号古琴梅旸；首创未核验",
+      "text_type": "视频标题短摘；不是歌曲歌词",
+      "tags": [
+        "冬日"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-012",
+      "text": "此刻，来年，都幸福",
+      "source_id": "dy-happiness",
+      "attribution": "发布者及首创未核验",
+      "text_type": "发布文案短摘，补标点",
+      "tags": [
+        "幸福"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-013",
+      "text": "愿你的圣诞树下的愿望都能实现",
+      "source_id": "dy-christmas",
+      "attribution": "评论用户小汤圆不圆",
+      "text_type": "公开评论短摘",
+      "tags": [
+        "圣诞"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-014",
+      "text": "但愿人长久，千里共婵娟",
+      "source_id": "classic-su-moon",
+      "attribution": "苏轼",
+      "text_type": "古诗词原句",
+      "tags": [
+        "相伴"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-015",
+      "text": "长风破浪会有时，直挂云帆济沧海",
+      "source_id": "classic-li",
+      "attribution": "李白",
+      "text_type": "古诗词原句",
+      "tags": [
+        "前程"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-016",
+      "text": "且将新火试新茶，诗酒趁年华",
+      "source_id": "classic-su-tea",
+      "attribution": "苏轼",
+      "text_type": "古诗词原句，句间标点归一",
+      "tags": [
+        "自在"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-017",
+      "text": "愿新春以后，吉吉利利，百事都如意",
+      "source_id": "classic-zhao",
+      "attribution": "赵长卿",
+      "text_type": "古诗词原句，句间标点归一",
+      "tags": [
+        "好运"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-018",
+      "text": "海内存知己，天涯若比邻",
+      "source_id": "classic-wang",
+      "attribution": "王勃",
+      "text_type": "古诗词原句",
+      "tags": [
+        "友情"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    },
+    {
+      "id": "collected-019",
+      "text": "愿身能似月亭亭，千里伴君行",
+      "source_id": "classic-zhang",
+      "attribution": "张先",
+      "text_type": "古诗词原句",
+      "tags": [
+        "相伴"
+      ],
+      "origin": "collected",
+      "review_status": "candidate"
+    }
+  ]
+}

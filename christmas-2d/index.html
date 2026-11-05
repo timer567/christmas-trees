@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>圣诞祝福</title><link rel="preload" href="./fonts/christmas-story-hand-v2.ttf" as="font" type="font/ttf" crossorigin></head><body>
+<div id="christmas-greeting-preview" aria-label="圣诞祝福互动贺卡">
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;padding:16px;display:grid;place-items:center;background:#071d1b;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+#christmas-greeting-preview{--background:#102b26;--foreground:#fff8e7;--green:#2f7659;--yellow:#dfc18b;--red:#a95753;--blue:#8faeb6;--purple:#99899f;--orange:#926746;--night:#102b26;--snow:#f6f8f1;--snow-shadow:#d4e3df;--tree:#2b5d4b;--tree-dark:#1c473a;--gold:#dfc18b;--red-light:#b96d64;--blue-light:#a5bfc1;--purple-light:#a398b0;position:relative;width:min(1100px,100%,calc((100svh - 32px)*16/9));aspect-ratio:16/9;overflow:hidden;border-radius:18px;background:var(--night);color:var(--snow);container-type:inline-size}
+.c-scene{position:absolute;right:0;top:0;width:75.721154%;height:100%}
+#christmas-canvas{display:block;width:100%;height:100%;touch-action:manipulation}
+.c-copy{position:absolute;z-index:2;left:5.5%;top:17%;width:32%;pointer-events:none}
+.c-kicker{margin:0 0 15px;color:#d9bd88;font-size:clamp(8px,1.05cqw,12px);font-weight:400;letter-spacing:.22em;text-transform:uppercase}
+.c-title{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(23px,5.9cqw,65px);font-weight:400;line-height:1.04;letter-spacing:-.04em;color:#fff5df}
+.c-rule{display:block;width:30px;height:1px;margin:20px 0 15px;background:#d9bd88;opacity:.65}
+.c-message{margin:0;font-size:clamp(9px,1.3cqw,14px);font-weight:400;line-height:1.95;letter-spacing:.08em;color:#d5dfd3}
+.c-signoff{margin:12px 0 0;color:#a4b9a9;font-size:clamp(8px,1cqw,11px);letter-spacing:.08em}
+.c-controls{position:absolute;z-index:5;left:5.5%;bottom:8%;width:30%;display:flex;flex-wrap:wrap;gap:7px 10px}
+.c-control-button{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid #7d947f66;background:#14372c;color:#eee5ce;border-radius:6px;font:400 clamp(9px,1.1cqw,12px)/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;padding:7px 9px;cursor:pointer;touch-action:manipulation}
+.c-track{justify-content:flex-start;width:100%;background:transparent;border:0;padding:0 0 5px;color:#dfc18d}
+.c-control-button:hover{background:#254a38}
+.c-control-button:focus-visible{outline:2px solid #e7c17b;outline-offset:3px}
+.c-control-button[aria-pressed="true"]{background:#34523a}
+.c-gift-message{position:absolute;z-index:4;width:150px;max-width:34%;padding:10px 12px;text-align:left;color:#2b493b;background:#fff9e9;border:1px solid #e4d6b9;border-radius:12px;box-shadow:0 5px 18px #071d1b22;opacity:0;pointer-events:none;transform:translate(-50%,10px);transform-origin:50% 100%;transition:opacity .3s ease,transform .65s cubic-bezier(.2,.8,.2,1)}
+.c-gift-message::after{content:"";position:absolute;bottom:-5px;left:50%;width:9px;height:9px;background:#fff9e9;transform:translateX(-50%) rotate(45deg)}
+.c-gift-message.is-open{opacity:1;transform:translate(-50%,0)}
+.c-gift-message strong{display:block;font-size:clamp(9px,1.25cqw,12px);font-weight:400;letter-spacing:.06em;margin-bottom:4px;color:#95794d}
+.c-gift-message span{display:block;font-size:clamp(10px,1.4cqw,13px);line-height:1.65;white-space:pre-line}
+.c-gift-message .c-poem-source{display:block;white-space:pre-line;margin-top:7px;font-size:clamp(8px,1.05cqw,10px);line-height:1.5;color:#81765d}
+.c-gift-message strong[hidden],.c-gift-message .c-poem-source[hidden]{display:none}
+#gift-message-warm{left:clamp(58px,16.86%,calc(100% - 58px));bottom:31%}
+#gift-message-joy{left:clamp(58px,81%,calc(100% - 58px));bottom:34%}
+@media(max-height:500px) and (orientation:landscape){body{padding:8px max(8px,env(safe-area-inset-right)) 8px max(8px,env(safe-area-inset-left))}#christmas-greeting-preview{width:min(100%,calc((100svh - 16px)*16/9));border-radius:12px}.c-kicker{margin-bottom:9px}.c-rule{margin:12px 0 10px}.c-signoff{margin-top:7px}.c-controls{gap:5px 7px}.c-control-button{padding:6px 8px}.c-track{padding:0 0 3px}.c-gift-message{padding:7px 9px}}
+@media(prefers-reduced-motion:reduce){.c-gift-message{transition:none}}
+
+/* 文字区与控制区分别占用固定比例的空间，防止窄屏下字号下限造成重叠。 */
+#christmas-greeting-preview .c-copy{top:12%;left:5.5%;width:32%;padding:0;margin:0}
+#christmas-greeting-preview .c-kicker{font-size:1.05cqw;line-height:1.5;margin:0 0 2cqw;letter-spacing:.15em}
+#christmas-greeting-preview .c-title{font-size:5.6cqw;line-height:1.04;margin:0;font-weight:400}
+#christmas-greeting-preview .c-rule{margin:2.4cqw 0 1.8cqw;width:3.8cqw}
+#christmas-greeting-preview .c-message{font-size:1.55cqw;line-height:1.8;letter-spacing:.04em;margin:0}
+#christmas-greeting-preview .c-signoff{font-size:1.18cqw;line-height:1.6;letter-spacing:.02em;margin:1.2cqw 0 0}
+#christmas-greeting-preview .c-controls{left:5.5%;bottom:6%;width:30%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1cqw;padding:0;margin:0;align-items:stretch}
+#christmas-greeting-preview .c-control-button{font-size:1.4cqw;line-height:1.5;padding:1cqw .7cqw;min-width:0;min-height:0;white-space:nowrap;letter-spacing:0;border-radius:.8cqw;gap:.6cqw}
+#christmas-greeting-preview .c-track{grid-column:1/-1;width:100%;padding:0 0 .7cqw;background:transparent;border:0;justify-content:flex-start}
+#christmas-greeting-preview .c-track i{font-size:1.6cqw;font-style:normal}
+#christmas-greeting-preview .c-track span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+#christmas-greeting-preview .c-controls{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr);align-items:center;gap:.7cqw;width:32%}
+#christmas-greeting-preview .c-control-button{font-size:1.1cqw;padding:.85cqw .55cqw}
+#christmas-greeting-preview .c-track{grid-column:auto;padding:.85cqw 0;width:100%;gap:.4cqw}
+
+/* 控制区收进左侧文案下方，两个开关并列，曲名放在下一行。 */
+#christmas-greeting-preview .c-controls{left:5.5%;top:74%;bottom:auto;width:25%;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.2cqw .8cqw}
+#christmas-greeting-preview .c-music{grid-column:1;grid-row:1}
+#christmas-greeting-preview .c-motion{grid-column:2;grid-row:1}
+#christmas-greeting-preview .c-track{grid-column:1/-1;grid-row:2;justify-content:flex-start;padding:0;width:100%}
+#christmas-greeting-preview .c-control-button{font-size:1.2cqw;padding:.9cqw .7cqw}
+#christmas-greeting-preview .c-track{padding:0}
+
+#christmas-greeting-preview .c-controls{top:72%;width:17%;display:flex;flex-direction:column;align-items:stretch;gap:.9cqw}
+#christmas-greeting-preview .c-music,#christmas-greeting-preview .c-track{width:100%;padding:.85cqw 1cqw;justify-content:center;border:1px solid #7d947f66;background:#14372c}
+#christmas-greeting-preview .c-track{color:#dfc18d}
+#christmas-greeting-preview .c-music-picker{position:absolute;z-index:8;left:calc(100% + 10px);bottom:0;width:clamp(150px,23cqw,240px);padding:12px;background:#fff9e9;color:#2b493b;border:1px solid #e4d6b9;border-radius:10px;box-shadow:0 6px 22px #071d1b33}
+#christmas-greeting-preview .c-music-picker[hidden]{display:none}
+#christmas-greeting-preview .c-music-picker label{display:block;margin-bottom:7px;font-size:12px}
+#christmas-greeting-preview .c-music-picker select{width:100%;padding:8px 5px;background:#fffdf6;color:#2b493b;border:1px solid #b9c8b8;border-radius:5px;font:inherit;font-size:13px;color-scheme:light}
+
+#christmas-greeting-preview .c-track{position:relative}
+#christmas-greeting-preview .c-track select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;color:#243e30;background:#fff9e9;color-scheme:light}
+#christmas-greeting-preview .c-track:focus-within{outline:2px solid var(--gold);outline-offset:3px}
+
+#christmas-greeting-preview .c-controls>.c-track{position:relative;display:block;padding:0;border:0;background:transparent}
+#christmas-greeting-preview .c-track-trigger{width:100%;color:#dfc18d}
+#christmas-greeting-preview .c-song-list{position:absolute;left:0;bottom:calc(100% + 7px);width:clamp(140px,20cqw,200px);padding:5px;z-index:10;border:1px solid #c7a76c55;border-radius:8px;background:#173b30;box-shadow:0 8px 24px #061d1a55}
+#christmas-greeting-preview .c-song-list[hidden]{display:none}
+#christmas-greeting-preview .c-song-list button{position:relative;display:block;width:100%;margin:0;padding:8px 20px 8px 9px;border:0;border-radius:4px;background:transparent;color:#ece7d7;text-align:left;font:400 clamp(10px,1.15cqw,12px)/1.45 "Segoe UI","Microsoft YaHei",sans-serif;cursor:pointer}
+#christmas-greeting-preview .c-song-list button:hover,#christmas-greeting-preview .c-song-list button:focus-visible{background:#2b5240;outline:1px solid #d9bd8866}
+#christmas-greeting-preview .c-song-list button[aria-pressed="true"]{background:#2a4d3c;color:#e9c88d}
+#christmas-greeting-preview .c-song-list button[aria-pressed="true"]::after{content:"✓";position:absolute;right:8px;color:#e9c88d}
+
+#christmas-greeting-preview .c-controls{top:65%;gap:.8cqw}
+#christmas-greeting-preview .c-track-trigger{gap:.8cqw}
+#christmas-greeting-preview .c-list-icon{display:inline-flex;flex-direction:column;justify-content:space-between;width:12px;height:10px;flex:none}
+#christmas-greeting-preview .c-list-icon i{position:relative;display:block;width:8px;height:1px;margin-left:4px;background:currentColor;border-radius:1px}
+#christmas-greeting-preview .c-list-icon i::before{content:"";position:absolute;left:-4px;top:-.5px;width:2px;height:2px;background:currentColor;border-radius:50%}
+#christmas-greeting-preview .c-song-list{top:calc(100% + .5cqw);bottom:auto;width:100%;min-width:0;padding:.35cqw;border-radius:.65cqw}
+#christmas-greeting-preview .c-song-list button{padding:.4cqw 1.6cqw .4cqw .65cqw;line-height:1.5;white-space:nowrap}
+#christmas-greeting-preview .c-song-list button[aria-pressed="true"]::after{right:.5cqw}
+
+/* 鼠标和触屏点击不显示焦点外框，键盘导航仍保留焦点提示。 */
+#christmas-greeting-preview .c-track:focus-within{outline:none}
+#christmas-greeting-preview .c-track-trigger:focus{outline:none;box-shadow:none}
+#christmas-greeting-preview .c-track-trigger:focus-visible{box-shadow:inset 0 0 0 1px #b9cbb477}
+
+/* 标题收进左侧深色区域，并柔化树景与文案区之间的接缝。 */
+#christmas-greeting-preview .c-title{font-size:4cqw;line-height:1.12;letter-spacing:-.035em}
+#christmas-greeting-preview .c-copy{width:25%}
+#christmas-greeting-preview .c-scene{mask-image:linear-gradient(to right,transparent 0%,#000 10%,#000 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 10%,#000 100%)}
+
+/* 中文采用本机宋体，减少界面感，保留纸质贺卡的书卷气。 */
+#christmas-greeting-preview{--chinese-font:"STSong","Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif}
+#christmas-greeting-preview .c-message,#christmas-greeting-preview .c-signoff,#christmas-greeting-preview .c-gift-message,#christmas-greeting-preview .c-control-button,#christmas-greeting-preview .c-song-list button{font-family:var(--chinese-font);font-weight:400;font-synthesis:none}
+#christmas-greeting-preview .c-message{font-size:1.65cqw;line-height:1.9;letter-spacing:.035em}
+#christmas-greeting-preview .c-signoff{font-size:1.22cqw;letter-spacing:.025em;line-height:1.8}
+#christmas-greeting-preview .c-gift-message span{line-height:1.85;letter-spacing:.02em}
+#christmas-greeting-preview .c-gift-message strong{letter-spacing:.03em}
+#christmas-greeting-preview .c-poem-source{line-height:1.75}
+#christmas-greeting-preview .c-control-button{letter-spacing:.045em}
+
+@font-face{font-family:"Christmas WenKai";src:url("./fonts/christmas-story-hand-v2.ttf") format("truetype");font-style:normal;font-weight:400;font-display:swap}
+#christmas-greeting-preview{--chinese-font:"Christmas WenKai","KaiTi","STKaiti",serif}
+#christmas-greeting-preview .c-message{font-size:1.8cqw;line-height:1.85;letter-spacing:.01em;color:#e1e6d7}
+#christmas-greeting-preview .c-signoff{font-size:1.28cqw;letter-spacing:.01em;opacity:.9}
+#christmas-greeting-preview .c-gift-message span{font-size:clamp(11px,1.5cqw,14px);line-height:1.8;letter-spacing:0}
+#christmas-greeting-preview .c-control-button{font-size:1.35cqw;letter-spacing:.015em}
+#christmas-greeting-preview .c-song-list button{font-size:1.1cqw}
+
+#christmas-greeting-preview .c-gift-message{will-change:transform,opacity;transition:opacity .25s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
+</style>
+<div class="c-scene">
+<canvas id="christmas-canvas" aria-label="点击地面礼盒，打开祝福和彩花"></canvas>
+<div class="c-gift-message" id="gift-message-warm" aria-live="polite"><strong>一份冬日温暖</strong><span>愿你的冬天被温柔与惊喜环绕。</span><small class="c-poem-source" hidden></small></div>
+<div class="c-gift-message" id="gift-message-joy" aria-live="polite"><strong>一份节日喜悦</strong><span>愿所有美好，如约而至。</span><small class="c-poem-source" hidden></small></div>
+</div>
+<main class="c-copy"><p class="c-kicker">A little Christmas magic</p><h1 class="c-title">Merry<br>Christmas</h1><span class="c-rule"></span><p class="c-message">愿这个冬日<br>有温暖，也有惊喜。</p><p class="c-signoff">轻触礼盒 · 拆开一份祝福</p></main>
+<audio id="christmas-track" preload="none" loop src="music/祝你圣诞快乐.mp3"></audio>
+<div class="c-controls">
+<button class="c-control-button c-music" type="button" aria-pressed="false">开启配乐</button>
+<div class="c-track"><button class="c-control-button c-track-trigger" type="button" aria-expanded="false" aria-controls="music-options">切换配乐 <span class="c-list-icon" aria-hidden="true"><i></i><i></i><i></i></span></button><div id="music-options" class="c-song-list" role="group" aria-label="选择圣诞乐曲" hidden><button type="button" data-track="0" aria-pressed="true">祝你圣诞快乐</button><button type="button" data-track="1" aria-pressed="false">铃儿响叮当</button><button type="button" data-track="2" aria-pressed="false">胡桃夹子·糖梅仙子</button></div></div>
+</div>
+<script src="./literature-library.js"></script>
+<script src="./movie-quotes.js"></script>
+<script src="./expanded-literature.js"></script>
+<script src="./expanded-movies.js"></script>
+<script>
+    (() => {
+      const root=document.getElementById('christmas-greeting-preview'),canvas=root.querySelector('#christmas-canvas'),ctx=canvas.getContext('2d'),musicButton=root.querySelector('.c-music'),giftMessages={warm:root.querySelector('#gift-message-warm'),joy:root.querySelector('#gift-message-joy')};let frame,paused=false,width=0,height=0,dpr=1,openedGifts={warm:false,joy:false};const confetti=[];
+      let snowPointer=null;
+      const updateSnowPointer=event=>{const bounds=canvas.getBoundingClientRect();snowPointer={x:(event.clientX-bounds.left)*700/bounds.width,y:(event.clientY-bounds.top)*520/bounds.height}};
+      canvas.addEventListener('pointermove',updateSnowPointer);
+      canvas.addEventListener('pointerdown',updateSnowPointer);
+      canvas.addEventListener('pointerleave',()=>{snowPointer=null});
+      canvas.addEventListener('pointercancel',()=>{snowPointer=null});
+      canvas.addEventListener('pointerup',event=>{if(event.pointerType!=='mouse')snowPointer=null});
+      const lidSurface=kind=>{const left=kind==='warm',lift=giftMotion[kind].value;return{cx:(left?118:567)-7*lift,cy:(left?427:414)-48*lift,angle:-.16*lift,half:left?50:51}};
+      const lidPosition=(surface,localX)=>({x:surface.cx+localX*Math.cos(surface.angle),y:surface.cy+localX*Math.sin(surface.angle)-1});
+      const snowState=(flake,time,now,pointer,radius)=>{
+        const distance=flake.y*520+time*flake.speed,cycle=Math.floor(distance/570);
+        if(flake.cycle!==cycle){flake.cycle=cycle;flake.meltAt=null;flake.landed=null;flake.previous=null}
+        let x=flake.x*700+Math.sin(time*.55+flake.phase)*15,y=(distance%570)-25;
+        if(!flake.landed&&flake.canLand&&flake.meltAt==null&&flake.previous){
+          for(const kind of ['warm','joy']){
+            const surface=lidSurface(kind),cos=Math.cos(surface.angle),sin=Math.sin(surface.angle);
+            const localX=(x-surface.cx)*cos+(y-surface.cy)*sin;
+            const localY=-(x-surface.cx)*sin+(y-surface.cy)*cos;
+            const previousY=-(flake.previous.x-surface.cx)*sin+(flake.previous.y-surface.cy)*cos;
+            if(previousY<0&&localY>=0&&Math.abs(localX)<surface.half-4){
+              flake.landed={kind,localX,at:now,rotation:time*.25+flake.spin};break
+            }
+          }
+        }
+        flake.previous={x,y};
+        if(flake.landed){
+          const landed=flake.landed,point=lidPosition(lidSurface(landed.kind),landed.localX);
+          x=point.x;y=point.y;
+          if(flake.meltAt==null&&pointer&&Math.hypot(x-pointer.x,y-pointer.y)<radius+flake.size)flake.meltAt=now;
+          const naturalProgress=Math.min(1,Math.max(0,(now-landed.at-450)/2100));const naturalMelt=naturalProgress*naturalProgress*(3-2*naturalProgress);
+          const touchedMelt=flake.meltAt==null?0:Math.min(1,(now-flake.meltAt)/650);
+          return{x,y,melt:Math.max(naturalMelt,touchedMelt),rotation:landed.rotation,sizeScale:1}
+        }
+        if(flake.meltAt==null&&pointer&&Math.hypot(x-pointer.x,y-pointer.y)<radius+flake.size)flake.meltAt=now;
+        const melt=flake.meltAt==null?0:Math.min(1,(now-flake.meltAt)/650);
+        return{x,y,melt,rotation:time*.25+flake.spin,sizeScale:1}
+      };
+      const snow=Array.from({length:48},(_,i)=>({x:(i*67%701)/700,y:(i*113%550)/520,size:4+(i%4)*1.3,speed:14+(i%6)*7,phase:i*.84,spin:i*.27,canLand:i%3===0}));const color=(()=>{const cache=new Map();return name=>{if(!cache.has(name))cache.set(name,getComputedStyle(root).getPropertyValue(name).trim());return cache.get(name)}})();const curve=(a,b,c,t)=>({x:(1-t)**2*a.x+2*(1-t)*t*b.x+t*t*c.x,y:(1-t)**2*a.y+2*(1-t)*t*b.y+t*t*c.y});
+      const polygon=(points,fill)=>{ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=fill;ctx.fill()};
+      const snowflake=(x,y,s,r,ink,opacity=1)=>{ctx.save();ctx.translate(x,y);ctx.rotate(r);ctx.strokeStyle=ink;ctx.globalAlpha=.66*opacity;ctx.lineWidth=Math.max(1,s/6);ctx.lineCap='round';for(let arm=0;arm<6;arm++){ctx.save();ctx.rotate(arm*Math.PI/3);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-s);ctx.moveTo(0,-s*.57);ctx.lineTo(s*.24,-s*.78);ctx.moveTo(0,-s*.57);ctx.lineTo(-s*.24,-s*.78);ctx.stroke();ctx.restore()}ctx.restore()};
+      const bulb=(x,y,ink,time,i)=>{ctx.save();const pulse=.9+.1*Math.sin(time*.9+i*.35);const reflected=ctx.createRadialGradient(x,y,1,x,y,15);reflected.addColorStop(0,ink);reflected.addColorStop(1,'rgba(223,193,139,0)');ctx.globalAlpha=.13*pulse;ctx.fillStyle=reflected;ctx.fillRect(x-15,y-15,30,30);ctx.globalAlpha=.88*pulse;ctx.shadowBlur=5;ctx.shadowColor=ink;ctx.fillStyle=ink;ctx.beginPath();ctx.arc(x,y,3.3,0,Math.PI*2);ctx.fill();ctx.globalAlpha=.55;ctx.shadowBlur=0;ctx.fillStyle='#fff7df';ctx.beginPath();ctx.arc(x-.9,y-1, .75,0,Math.PI*2);ctx.fill();ctx.restore()};
+      const garlandCache=new Map();
+      const garland=(a,b,c,inks,time,offset)=>{
+        ctx.save();ctx.strokeStyle='#8e9366';ctx.globalAlpha=.4;ctx.lineWidth=.85;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(b.x,b.y,c.x,c.y);ctx.stroke();ctx.restore();
+        // 按弧长均匀分布灯珠，避免弯曲处拥挤；静态位置仅计算一次。
+        const key=[a.x,a.y,b.x,b.y,c.x,c.y,inks.length].join(',');
+        if(!garlandCache.has(key)){const samples=[{...a,length:0}];for(let i=1;i<=64;i++){const p=curve(a,b,c,i/64),prev=samples[i-1];samples.push({...p,length:prev.length+Math.hypot(p.x-prev.x,p.y-prev.y)})}
+          const total=samples[64].length,positions=[];let index=1;
+          for(let i=0;i<inks.length;i++){const distance=total*(i+1)/(inks.length+1);while(samples[index].length<distance)index++;const start=samples[index-1],end=samples[index],fraction=(distance-start.length)/(end.length-start.length);positions.push({x:start.x+(end.x-start.x)*fraction,y:start.y+(end.y-start.y)*fraction})}
+          garlandCache.set(key,positions)}
+        garlandCache.get(key).forEach((p,i)=>bulb(p.x,p.y,inks[i],time,i+offset))
+      };
+      const tree=time=>{
+        const cx=350,green=color('--tree'),deep=color('--tree-dark'),gold=color('--gold'),shades=['#e1c58b','#c67d70','#8eaea4','#b59aab'],bough=(top,bottom,half,ink)=>{ctx.beginPath();ctx.moveTo(cx,top);ctx.bezierCurveTo(cx-half*.12,top+25,cx-half*.38,bottom-46,cx-half*.76,bottom-14);ctx.quadraticCurveTo(cx-half*.48,bottom-4,cx-half,bottom+6);ctx.quadraticCurveTo(cx-half*.46,bottom+2,cx,bottom+19);ctx.quadraticCurveTo(cx+half*.46,bottom+2,cx+half,bottom+6);ctx.quadraticCurveTo(cx+half*.48,bottom-4,cx+half*.76,bottom-14);ctx.bezierCurveTo(cx+half*.38,bottom-46,cx+half*.12,top+25,cx,top);ctx.closePath();ctx.fillStyle=ink;ctx.fill()};
+        // 树干先于枝叶绘制，上端被树冠遮住，下端由雪地自然遮住。
+        const bark=ctx.createLinearGradient(333,0,367,0);bark.addColorStop(0,'#4d4937');bark.addColorStop(.5,'#756348');bark.addColorStop(1,'#434735');
+        ctx.fillStyle=bark;ctx.beginPath();ctx.moveTo(339,446);ctx.quadraticCurveTo(338,473,332,493);ctx.quadraticCurveTo(350,498,368,493);ctx.quadraticCurveTo(361,473,360,446);ctx.closePath();ctx.fill();
+        ctx.save();ctx.clip();const trunkShade=ctx.createLinearGradient(0,450,0,490);trunkShade.addColorStop(0,'rgba(10,34,29,.6)');trunkShade.addColorStop(.65,'rgba(10,34,29,.1)');trunkShade.addColorStop(1,'rgba(213,231,224,.13)');ctx.fillStyle=trunkShade;ctx.fillRect(330,446,40,50);ctx.strokeStyle='rgba(37,48,34,.22)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(345,459);ctx.quadraticCurveTo(343,475,342,488);ctx.moveTo(355,462);ctx.quadraticCurveTo(354,475,358,490);ctx.stroke();ctx.restore();
+
+        ctx.save();ctx.shadowColor='rgba(0,0,0,.2)';ctx.shadowBlur=12;ctx.shadowOffsetY=7;
+        // 枝叶从左下的暗部过渡到朝向月亮的冷亮面，保持剪纸轮廓。
+        const foliage=(top,bottom,half,base)=>{const light=ctx.createLinearGradient(cx-half,bottom,cx+half,top);light.addColorStop(0,deep);light.addColorStop(.55,base);light.addColorStop(1,'#416e5c');return light};
+        bough(132,246,76,foliage(132,246,76,deep));bough(187,326,132,foliage(187,326,132,green));bough(252,407,191,foliage(252,407,191,deep));bough(316,447,244,foliage(316,447,244,green));ctx.restore();
+        // 灯带缩进枝叶内侧，暗色细线承托彩灯。
+        garland({x:306,y:278},{x:350,y:311},{x:394,y:287},[shades[0],shades[1],shades[0]],time,0);
+        garland({x:276,y:349},{x:350,y:383},{x:424,y:340},[shades[2],shades[0],shades[1],shades[0],shades[2]],time,3);
+        garland({x:243,y:411},{x:350,y:456},{x:457,y:421},[shades[0],shades[1],shades[0],shades[2],shades[0],shades[1]],time,8);
+        // 星顶低位嵌入树尖，暖光仅落在邻近枝叶。
+        ctx.save();const reflected=ctx.createRadialGradient(cx,145,0,cx,145,28);reflected.addColorStop(0,'rgba(231,193,123,.20)');reflected.addColorStop(1,'rgba(231,193,123,0)');ctx.fillStyle=reflected;ctx.fillRect(cx-28,117,56,56);
+        ctx.translate(cx,124);ctx.shadowColor='rgba(231,193,123,.55)';ctx.shadowBlur=14;
+        const starGold=ctx.createLinearGradient(-20,-26,18,25);starGold.addColorStop(0,'#f0dcac');starGold.addColorStop(1,'#cba66a');ctx.fillStyle=starGold;ctx.beginPath();
+        for(let i=0;i<10;i++){const radius=i%2?10:26,angle=-Math.PI/2+i*Math.PI/5,x=Math.cos(angle)*radius,y=Math.sin(angle)*radius;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}
+        ctx.closePath();ctx.fill();ctx.restore()
+      };
+      const giftMotion={warm:{at:0,from:0,to:0,value:0},joy:{at:0,from:0,to:0,value:0}};
+      const updateGiftMotion=(motion,elapsed,now,kind)=>{
+        const clamp=t=>Math.max(0,Math.min(1,t)),smooth=t=>t*t*(3-2*t),opening=motion.to===1;
+        let lidProgress,paperProgress;
+        if(opening){const t=clamp((elapsed-.12)/.85),c1=1.15;lidProgress=1+(c1+1)*Math.pow(t-1,3)+c1*Math.pow(t-1,2);const p=clamp((elapsed-.28)/.65);paperProgress=1-Math.pow(1-p,3)}
+        else{const progress=smooth(clamp(elapsed/.48));lidProgress=progress;paperProgress=progress}
+        motion.value=motion.from+(motion.to-motion.from)*lidProgress;
+        const paperFrom=motion.paperFrom||0;
+        motion.paper=opening?paperFrom+(1-paperFrom)*paperProgress:paperFrom*(1-paperProgress);
+        const settle=smooth(clamp((elapsed-.85)/.35)),phase=kind==='warm'?0:1.3;
+        motion.paperBob=opening?(motion.bobFrom||0)*(1-paperProgress)+Math.sin(now/1000*1.5+phase)*1.1*settle*motion.paper:(motion.bobFrom||0)*(1-paperProgress);
+        motion.paperTilt=opening?(motion.tiltFrom||0)*(1-paperProgress)+Math.sin(now/1000*.8)*.025*settle*motion.paper:(motion.tiltFrom||0)*(1-paperProgress)+Math.sin(paperProgress*Math.PI)*.06;
+        return motion
+      };
+      const gift=(x,y,w,h,box,ribbon,isOpen)=>{const kind=x<350?'warm':'joy',motion=giftMotion[kind],elapsed=Math.max(0,(performance.now()-motion.at)/1000),opening=motion.to===1;updateGiftMotion(motion,elapsed,performance.now(),kind);const lift=motion.value,press=opening&&elapsed<.12?Math.sin(elapsed/.12*Math.PI)*3:0;
+        // 雪面接触阴影先画，避免给整个盒体套上悬浮投影。
+        ctx.save();
+        const base=y+h;
+        ctx.fillStyle='rgba(56,91,97,.12)';ctx.beginPath();ctx.ellipse(x+w*.5,base+1,w*.64,5,0,0,Math.PI*2);ctx.fill();
+        const material=ctx.createLinearGradient(x,y,x+w,y+h);material.addColorStop(0,box);material.addColorStop(1,box);
+        ctx.fillStyle=material;ctx.fillRect(x,y+press,w,h-press);
+        const shade=ctx.createLinearGradient(x,0,x+w,0);shade.addColorStop(0,'rgba(255,248,224,.10)');shade.addColorStop(.72,'rgba(10,39,39,.05)');shade.addColorStop(1,'rgba(10,39,39,.20)');
+        ctx.fillStyle=shade;ctx.fillRect(x,y+press,w,h-press);
+        ctx.fillStyle=ribbon;ctx.globalAlpha=.78;ctx.fillRect(x+w*.42,y+press,w*.16,h-press);ctx.globalAlpha=1;
+        ctx.fillStyle='rgba(199,223,225,.08)';ctx.fillRect(x,base-16,w,16);
+        // 月光只轻扫盒身右缘，颜色固定，不随开合改变。
+        const moonEdge=ctx.createLinearGradient(x+w-13,0,x+w,0);moonEdge.addColorStop(0,'rgba(211,231,224,0)');moonEdge.addColorStop(1,'rgba(211,231,224,.18)');ctx.fillStyle=moonEdge;ctx.fillRect(x+w-13,y+press,13,h-press);
+        // 盒口沿用盒身的材质，不随开盖进度叠加变色的暗条。
+
+        // 纸条与盒盖同时缓缓落下，纸条保持尺寸与不透明度，并由盒口逐步遮住。
+        const paperReveal=Math.max(0,Math.min(1,motion.paper||0));
+        if(paperReveal>0){
+          const paperWidth=w*.54,paperHeight=18;
+          ctx.save();ctx.beginPath();ctx.rect(x-8,y-70,w+16,71);ctx.clip();
+          ctx.translate(x+w*.5-3*paperReveal,y+12-37*paperReveal+motion.paperBob);
+          ctx.rotate(motion.paperTilt);
+          const left=-paperWidth*.5,top=-paperHeight*.5;
+          const paperTone=ctx.createLinearGradient(0,top,0,-top);paperTone.addColorStop(0,'#fbf2de');paperTone.addColorStop(.7,'#efe2c5');paperTone.addColorStop(1,'#e3d2af');
+          ctx.fillStyle=paperTone;ctx.shadowColor='rgba(15,35,29,.12)';ctx.shadowBlur=3;ctx.shadowOffsetY=1;
+          ctx.beginPath();ctx.moveTo(left,top+1);ctx.quadraticCurveTo(-paperWidth*.12,top-1,paperWidth*.2,top+1);ctx.quadraticCurveTo(paperWidth*.4,top+2,-left,top);ctx.quadraticCurveTo(-left-1,0,-left,-top-1);ctx.quadraticCurveTo(0,-top+1,left,-top);ctx.quadraticCurveTo(left+1,0,left,top+1);ctx.closePath();ctx.fill();
+          ctx.shadowBlur=0;ctx.strokeStyle='rgba(115,99,73,.57)';ctx.lineWidth=.65;ctx.lineCap='round';
+          // 每行长短不同的小弯线，不替换原有的祝福文字。
+          for(let line=0;line<3;line++){
+            const lineY=top+5+line*4.1,lineLeft=left+6,lineWidth=paperWidth-(line===2?19:12);
+            ctx.beginPath();ctx.moveTo(lineLeft,lineY);
+            for(let segment=0;segment<5;segment++){const sx=lineLeft+lineWidth*segment/5,ex=lineLeft+lineWidth*(segment+1)/5,bend=(segment+line)%2?-.8:.8;ctx.bezierCurveTo(sx+lineWidth/15,lineY+bend,ex-lineWidth/16,lineY-bend,ex,lineY)}
+            ctx.stroke()
+          }
+          ctx.restore();
+        }
+        ctx.save();ctx.translate(x+w*.5-7*lift,y-7-48*lift+press);ctx.rotate(-.16*lift);
+        ctx.fillStyle=box;ctx.fillRect(-w*.5-4,0,w+8,10);
+        ctx.fillStyle='rgba(10,39,39,.16)';ctx.fillRect(-w*.5-4,6,w+8,4);
+        ctx.fillStyle=ribbon;ctx.globalAlpha=.82;ctx.fillRect(-w*.08,0,w*.16,10);ctx.globalAlpha=1;
+        // 薄薄的积雪随盒盖一起开合。
+        ctx.fillStyle=color('--snow');ctx.beginPath();ctx.moveTo(-w*.5-3,1);ctx.quadraticCurveTo(-w*.28,-3,0,-1);ctx.quadraticCurveTo(w*.22,-4,w*.5+3,0);ctx.lineTo(w*.5+3,2);ctx.quadraticCurveTo(w*.2,0,0,2);ctx.quadraticCurveTo(-w*.25,0,-w*.5-3,3);ctx.closePath();ctx.fill();ctx.restore();
+        // 少量前景积雪遮住盒底，形成嵌入雪面的接触关系。
+        ctx.fillStyle=color('--snow-shadow');ctx.beginPath();ctx.ellipse(x+w*.5,base+2,w*.6,4,0,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle=color('--snow');ctx.beginPath();ctx.moveTo(x-10,base+5);ctx.quadraticCurveTo(x-3,base-6,x+10,base-4);ctx.quadraticCurveTo(x+w*.28,base+1,x+w*.5,base-2);ctx.quadraticCurveTo(x+w*.8,base-1,x+w-4,base-5);ctx.quadraticCurveTo(x+w+6,base-6,x+w+12,base+5);ctx.closePath();ctx.fill();
+        ctx.restore()
+      };const snowbank=(snow,shade)=>{ctx.save();ctx.fillStyle=shade;ctx.beginPath();ctx.moveTo(0,467);ctx.quadraticCurveTo(120,440,228,469);ctx.quadraticCurveTo(350,494,477,458);ctx.quadraticCurveTo(585,429,700,456);ctx.lineTo(700,520);ctx.lineTo(0,520);ctx.closePath();ctx.fill();ctx.fillStyle=snow;ctx.beginPath();ctx.moveTo(0,480);ctx.quadraticCurveTo(116,450,246,479);ctx.quadraticCurveTo(366,505,492,466);ctx.quadraticCurveTo(604,445,700,468);ctx.lineTo(700,520);ctx.lineTo(0,520);ctx.closePath();ctx.fill();ctx.restore()};
+      
+      const drawGroundLight=()=>{
+        ctx.save();ctx.translate(350,487);ctx.scale(1,.22);
+        const shadow=ctx.createRadialGradient(-12,0,4,-12,0,116);shadow.addColorStop(0,'rgba(41,73,65,.17)');shadow.addColorStop(1,'rgba(41,73,65,0)');ctx.fillStyle=shadow;ctx.fillRect(-140,-120,270,240);
+        const warm=ctx.createRadialGradient(0,8,0,0,8,72);warm.addColorStop(0,'rgba(223,193,139,.12)');warm.addColorStop(1,'rgba(223,193,139,0)');ctx.fillStyle=warm;ctx.fillRect(-72,-64,144,144);ctx.restore();
+        ctx.save();ctx.translate(562,480);ctx.scale(1,.28);const moonlight=ctx.createRadialGradient(0,0,0,0,0,125);moonlight.addColorStop(0,'rgba(222,236,233,.3)');moonlight.addColorStop(1,'rgba(222,236,233,0)');ctx.fillStyle=moonlight;ctx.fillRect(-125,-125,250,250);ctx.restore()
+      };
+      // 远景使用固定地形，保持层次稳定，避免雪山随动画帧抖动。
+      const drawLandscape=now=>{
+        ctx.save();
+        const sky=ctx.createLinearGradient(0,0,0,480);
+        sky.addColorStop(0,'#142f32');sky.addColorStop(.55,'#35565b');sky.addColorStop(1,'#799b9c');
+        ctx.fillStyle=sky;ctx.fillRect(0,0,700,520);
+        const moon=ctx.createRadialGradient(568,72,7,568,72,58);
+        moon.addColorStop(0,'rgba(255,238,190,.16)');moon.addColorStop(1,'rgba(255,238,190,0)');
+        ctx.fillStyle=moon;ctx.fillRect(506,10,124,124);
+        ctx.fillStyle='#e9e5c9';ctx.globalAlpha=.78;ctx.beginPath();ctx.arc(568,72,15,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+        const ridge=(points,ink)=>{ctx.beginPath();ctx.moveTo(0,520);points.forEach(p=>ctx.lineTo(p[0],p[1]));ctx.lineTo(700,520);ctx.closePath();ctx.fillStyle=ink;ctx.fill()};
+        drawSleigh(now,'behind');
+        ridge([[0,300],[50,258],[92,276],[176,155],[240,241],[300,190],[384,273],[464,176],[514,232],[591,133],[657,234],[700,210]],'#6e8e94');
+        const snowcap=(left,peak,right,ink)=>{
+          // 雪帽边缘直接由同一座山的两侧插值得到，避免错位。
+          const lerp=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t],l=lerp(peak,left,.45),r=lerp(peak,right,.53);
+          ctx.save();ctx.beginPath();ctx.moveTo(...left);ctx.lineTo(...peak);ctx.lineTo(...right);ctx.closePath();ctx.clip();
+          ctx.fillStyle=ink;ctx.beginPath();ctx.moveTo(...l);ctx.lineTo(...peak);ctx.lineTo(...r);
+          const width=r[0]-l[0],base=(l[1]+r[1])/2;
+          ctx.lineTo(l[0]+width*.71,base-8);ctx.quadraticCurveTo(l[0]+width*.63,base-6,l[0]+width*.54,base+7);ctx.lineTo(l[0]+width*.38,base-13);ctx.quadraticCurveTo(l[0]+width*.17,base-7,l[0],l[1]);ctx.closePath();ctx.fill();ctx.restore()
+        };
+        snowcap([92,276],[176,155],[240,241],'#adc7c6');
+        snowcap([514,232],[591,133],[657,234],'#c4d7d0');
+        snowcap([384,273],[464,176],[514,232],'#a9c3c3');
+        ridge([[0,341],[49,297],[98,326],[167,265],[238,329],[309,283],[399,345],[470,290],[550,332],[621,253],[700,306]],'#48747c');
+        const mist=ctx.createLinearGradient(0,288,0,390);mist.addColorStop(0,'rgba(193,217,212,0)');mist.addColorStop(.6,'rgba(193,217,212,.13)');mist.addColorStop(1,'rgba(193,217,212,0)');ctx.fillStyle=mist;ctx.fillRect(0,288,700,102);
+        ridge([[0,384],[90,356],[190,383],[291,359],[412,391],[523,349],[631,365],[700,345]],'#315d61');
+        const pine=(x,y,size)=>{ctx.fillStyle='#244e50';ctx.beginPath();ctx.moveTo(x,y-size);ctx.lineTo(x-size*.32,y-size*.4);ctx.lineTo(x-size*.18,y-size*.4);ctx.lineTo(x-size*.43,y);ctx.lineTo(x+size*.43,y);ctx.lineTo(x+size*.18,y-size*.4);ctx.lineTo(x+size*.32,y-size*.4);ctx.closePath();ctx.fill();ctx.fillRect(x-1,y,2,size*.12)};
+        [[20,399,35],[48,394,47],[78,399,28],[102,399,40],[145,408,32],[570,389,33],[600,382,46],[635,382,30],[664,377,52],[693,379,39]].forEach(p=>pine(...p));
+        const front=ctx.createLinearGradient(0,375,0,480);front.addColorStop(0,'rgba(16,43,38,0)');front.addColorStop(1,'rgba(16,43,38,.65)');ctx.fillStyle=front;ctx.fillRect(0,375,700,145);
+        ctx.restore();
+      };
+
+      // 每次飞行结束后重新抽取等待时长，相邻等待至少相差10秒。
+      const chooseFlightWait=(previous,random=Math.random)=>{const choices=[];for(let seconds=20;seconds<=70;seconds++)if(previous==null||Math.abs(seconds-previous)>=10)choices.push(seconds);return choices[Math.min(choices.length-1,Math.floor(random()*choices.length))]*1000};
+      const sleighTestMode=false;let flightWait=chooseFlightWait(null),nextFlightAt=performance.now()+(sleighTestMode?0:flightWait),flightStarted=null;
+      
+      const chooseSleighRoute=(index,misses,random=Math.random)=>{
+        const moonPass=misses>=2||random()<.4;
+        return{direction:index%2===0?1:-1,depth:random()<.5?'behind':'front',moonPass,altitude:moonPass?67+random()*10:170+random()*35,amplitude:3+random()*4,phase:random()*Math.PI*2}
+      };
+      let flightNumber=0,moonMisses=0,flightRoute=null;
+const blendSleighColor=(hex,light)=>{const dark=[15,36,40],rgb=hex.match(/\w\w/g).map(v=>parseInt(v,16));return 'rgb('+rgb.map((v,i)=>Math.round(dark[i]+(v-dark[i])*light)).join(',')+')'};
+      const advanceSleigh=now=>{
+        if(flightStarted!=null&&(now-flightStarted)>=11000){flightWait=chooseFlightWait(flightWait/1000);nextFlightAt=now+(sleighTestMode?0:flightWait);flightStarted=null}
+        if(flightStarted==null&&now>=nextFlightAt){flightRoute=chooseSleighRoute(flightNumber,moonMisses);flightNumber++;moonMisses=flightRoute.moonPass?0:moonMisses+1;flightStarted=now}
+      };
+      const drawSleigh=(now,layer)=>{
+        if(flightStarted==null||flightRoute.depth!==layer)return;
+        const progress=(now-flightStarted)/11000;
+        const direction=flightRoute.direction;const x=direction===1?-30+progress*760:730-progress*760,y=flightRoute.altitude+Math.sin(progress*Math.PI*2+flightRoute.phase)*flightRoute.amplitude;
+        const moonDistance=Math.hypot(x+direction*5-568,y-72),moonInfluence=Math.max(0,1-moonDistance/75);const light=.22*moonInfluence*moonInfluence*(3-2*moonInfluence);
+        const ink=hex=>blendSleighColor(hex,light);
+        // 低亮度短拖尾在世界坐标绘制，不放大雪橇本体。
+        ctx.save();
+        const trailFade=Math.min(1,progress*15,(1-progress)*15);
+        const glowTrail=ctx.createLinearGradient(x-direction*36,y,x-direction*5,y);
+        glowTrail.addColorStop(0,'rgba(215,224,211,0)');
+        glowTrail.addColorStop(1,'rgba(228,217,174,'+(.11*trailFade)+')');
+        ctx.strokeStyle=glowTrail;ctx.lineWidth=.65;ctx.beginPath();ctx.moveTo(x-direction*36,y+2);ctx.quadraticCurveTo(x-direction*19,y-1,x-direction*5,y+1);ctx.stroke();
+        for(let i=0;i<16;i++){const age=((now/1000+i*.061)%1);const alpha=Math.sin(age*Math.PI)*(1-age)*.16*trailFade;ctx.globalAlpha=alpha;ctx.fillStyle=i%3?'#e8e0be':'#d3e5e1';ctx.beginPath();ctx.arc(x-direction*(5+age*30),y+1+Math.sin(i*2.4+age*3)*age*2.5,.28+(i%3)*.13,0,Math.PI*2);ctx.fill()}
+        ctx.restore();
+        ctx.save();ctx.translate(x,y);ctx.scale(.1*direction,.1);ctx.globalAlpha=.78;
+        ctx.lineCap='round';ctx.lineJoin='round';
+        // 缰绳连接雪橇与两只麋鹿。
+        ctx.strokeStyle=ink('ddbf78');ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(16,15);ctx.quadraticCurveTo(67,30,119,3);ctx.stroke();
+        const deer=(dx,dy,phase)=>{
+          const stride=now/1000*10+phase,bob=Math.cos(stride*2)*3;
+          ctx.save();ctx.translate(dx,dy+bob);ctx.rotate(Math.sin(stride)*.035);
+          // 四条分段腿交替伸展与收拢，远侧腿稍暗。
+          const leg=(hip,angle,far)=>{ctx.save();ctx.globalAlpha=far?.5:.9;ctx.strokeStyle=ink('ac7c52');ctx.lineWidth=3;const kneeX=hip+Math.sin(angle)*11,kneeY=5+Math.cos(angle)*11,hoofX=kneeX+Math.sin(angle-.55)*10,hoofY=kneeY+Math.cos(angle-.55)*10;ctx.beginPath();ctx.moveTo(hip,3);ctx.lineTo(kneeX,kneeY);ctx.lineTo(hoofX,hoofY);ctx.stroke();ctx.restore()};
+          leg(-10,Math.sin(stride+Math.PI)*1.15,true);leg(9,Math.sin(stride)*1.15,true);
+          ctx.fillStyle=ink('ac7c52');ctx.beginPath();ctx.ellipse(0,0,17,7,-.12,0,Math.PI*2);ctx.fill();
+          ctx.strokeStyle=ink('ac7c52');ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(10,-2);ctx.lineTo(17,-14);ctx.lineTo(24,-13);ctx.stroke();
+          leg(-10,Math.sin(stride)*1.15,false);leg(9,Math.sin(stride+Math.PI)*1.15,false);
+          ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-14,-2);ctx.lineTo(-22,-7+Math.sin(stride)*2);ctx.stroke();
+          ctx.strokeStyle=ink('d6bf90');ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(17,-16);ctx.lineTo(13,-26);ctx.moveTo(14,-22);ctx.lineTo(8,-24);ctx.moveTo(13,-25);ctx.lineTo(14,-30);ctx.moveTo(20,-16);ctx.lineTo(23,-27);ctx.moveTo(22,-23);ctx.lineTo(29,-26);ctx.moveTo(23,-27);ctx.lineTo(21,-31);ctx.stroke();
+          ctx.fillStyle=ink('df7c64');ctx.beginPath();ctx.arc(27,-13,2.2,0,Math.PI*2);ctx.fill();ctx.restore()
+        };
+        deer(76,0,0);deer(125,-5,1.4);
+        // 雪橇、礼物袋与圣诞老人均为原创轮廓。
+        ctx.fillStyle=ink('99694b');ctx.beginPath();ctx.ellipse(-32,2,13,17,-.3,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle=ink('c74443');ctx.beginPath();ctx.moveTo(-50,12);ctx.lineTo(1,12);ctx.quadraticCurveTo(13,11,17,0);ctx.lineTo(21,2);ctx.quadraticCurveTo(18,26,-39,26);ctx.closePath();ctx.fill();
+        ctx.strokeStyle=ink('e7c17b');ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(-50,31);ctx.lineTo(8,31);ctx.quadraticCurveTo(23,31,25,23);ctx.moveTo(-35,25);ctx.lineTo(-38,31);ctx.moveTo(1,25);ctx.lineTo(4,31);ctx.stroke();
+        ctx.fillStyle=ink('db554d');ctx.beginPath();ctx.ellipse(-9,-1,11,15,-.1,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle=ink('f2d4b0');ctx.beginPath();ctx.arc(-6,-20,7,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle=ink('fff0d7');ctx.beginPath();ctx.moveTo(-12,-19);ctx.quadraticCurveTo(-8,-3,1,-17);ctx.closePath();ctx.fill();
+        ctx.fillStyle=ink('db554d');ctx.beginPath();ctx.moveTo(-14,-25);ctx.lineTo(-4,-38);ctx.lineTo(4,-25);ctx.closePath();ctx.fill();
+        ctx.strokeStyle=ink('fff0d7');ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-14,-25);ctx.lineTo(4,-25);ctx.stroke();ctx.beginPath();ctx.arc(-4,-38,2,0,Math.PI*2);ctx.stroke();
+        ctx.strokeStyle=ink('db554d');ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-3,-6);ctx.lineTo(12,2);ctx.stroke();
+        ctx.restore();
+      };
+let sceneVisible=true;const render=now=>{frame=null;if(document.hidden||!sceneVisible)return;const time=now/1000,night=color('--night'),gold=color('--gold'),snowColor=color('--snow');ctx.setTransform(dpr*width/700,0,0,dpr*height/520,0,0);ctx.fillStyle=night;ctx.fillRect(0,0,700,520);const glow=ctx.createRadialGradient(350,420,35,350,420,440);glow.addColorStop(0,gold);glow.addColorStop(1,night);ctx.globalAlpha=.15;ctx.fillStyle=glow;ctx.fillRect(0,0,700,520);ctx.globalAlpha=1;advanceSleigh(now);drawLandscape(now);drawSleigh(now,'front');tree(time);snowbank(snowColor,color('--snow-shadow'));drawGroundLight();gift(72,434,92,54,color('--red-light'),gold,openedGifts.warm);gift(520,421,94,67,color('--purple-light'),gold,openedGifts.joy);snow.forEach(f=>{const state=snowState(f,time,now,snowPointer,Math.min(48,28*700/Math.max(width,1)));if(state.melt<1)snowflake(state.x,state.y,f.size*state.sizeScale*(1-state.melt*.8),state.rotation,snowColor,1-state.melt)});drawConfetti(now);if(!paused)frame=requestAnimationFrame(render)};
+      const suspendDrawing=()=>{if(frame!=null){cancelAnimationFrame(frame);frame=null}};
+      const resumeDrawing=()=>{if(!document.hidden&&sceneVisible&&frame==null)frame=requestAnimationFrame(render)};
+      new IntersectionObserver(entries=>{sceneVisible=entries[0].isIntersecting;if(sceneVisible)resumeDrawing();else suspendDrawing()},{threshold:0}).observe(root);
+      document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendDrawing();else resumeDrawing()});
+      window.addEventListener('pagehide',suspendDrawing);
+      window.addEventListener('pageshow',resumeDrawing);
+      const poemWishes=[...window.christmasLiterature,...window.christmasMovieQuotes,...window.christmasExpandedLiterature,...window.christmasExpandedMovies];
+      const ordinaryWishes=[{"id":"wish-01","title":"一份冬日温暖","message":"愿你的冬天被温柔与惊喜环绕。"},{"id":"wish-02","title":"一份节日喜悦","message":"愿所有美好，如约而至。"},{"id":"wish-03","title":"一份安静的祝愿","message":"愿你走过风雪，仍有暖灯等候。"},{"id":"wish-04","title":"一份甜甜的心意","message":"愿你口袋有糖，心里有光。"},{"id":"wish-05","title":"一份星光","message":"愿平凡的日子，也有闪亮的小事。"},{"id":"wish-06","title":"一份小小的幸运","message":"愿惊喜轻轻敲门，恰好被你听见。"},{"id":"wish-07","title":"一份团聚的温暖","message":"愿惦念的人，都在灯火可及之处。"},{"id":"wish-08","title":"一份冬日好梦","message":"愿今夜的雪，替你把烦恼放轻。"},{"id":"wish-09","title":"一份新年的期盼","message":"愿下一段旅程，有欢喜，也有收获。"},{"id":"wish-10","title":"一份柔软的时光","message":"愿你有闲听雪，也有热茶暖手。"},{"id":"wish-11","title":"一份轻盈的快乐","message":"愿忙碌告一段落，快乐刚好到来。"},{"id":"wish-12","title":"一份长久的陪伴","message":"愿每个冬天，都有人与你分享暖意。"}];
+      // 两个礼盒共用最近10次开盒记录；合盖和重绘均不计轮次。
+      const historyKey='christmas-gift-history-v1',validWishIds=new Set([...poemWishes,...ordinaryWishes].map(w=>w.id));
+      let recentWishIds=[];try{const saved=JSON.parse(localStorage.getItem(historyKey)||'[]');if(Array.isArray(saved))recentWishIds=saved.filter(id=>validWishIds.has(id)).slice(-10)}catch{}
+      const chooseGiftWish=(title,message,random=Math.random)=>{
+        const pool=random()<.5?poemWishes:ordinaryWishes;
+        const candidates=pool.filter(wish=>!recentWishIds.includes(wish.id));
+        const wish=candidates[Math.min(candidates.length-1,Math.floor(random()*candidates.length))];
+        recentWishIds.push(wish.id);recentWishIds=recentWishIds.slice(-10);
+        try{localStorage.setItem(historyKey,JSON.stringify(recentWishIds))}catch{}
+        return wish
+      };
+      if(document.fonts)document.fonts.load('14px "Christmas WenKai"',[...poemWishes,...ordinaryWishes].map(wish=>wish.title+wish.message+(wish.work||'')).join('')+'节选自作者电影台词中文译意').catch(()=>{});
+      const resize=()=>{const box=canvas.getBoundingClientRect();width=box.width;height=box.height;dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);if(paused)render(performance.now())};const drawConfetti=now=>{for(let i=confetti.length-1;i>=0;i--){const p=confetti[i],t=(now-p.birth)/1000;if(t<0)continue;if(t>2.8){confetti.splice(i,1);continue}ctx.save();ctx.translate(p.x+p.vx*t,p.y+p.vy*t+75*t*t);ctx.rotate(p.spin*t);ctx.globalAlpha=Math.min(1,(2.8-t)*2);ctx.fillStyle=p.ink;ctx.scale(1,Math.cos(t*7+p.spin)*.6+.4);ctx.fillRect(-3,-2,6,4);ctx.restore()}};const openGift=(kind,title,message)=>{openedGifts[kind]=!openedGifts[kind];const motion=giftMotion[kind];motion.from=motion.value;motion.paperFrom=motion.paper||0;motion.bobFrom=motion.paperBob||0;motion.tiltFrom=motion.paperTilt||0;motion.to=openedGifts[kind]?1:0;motion.at=performance.now();if(openedGifts[kind]){const wish=chooseGiftWish(title,message);giftMessages[kind].querySelector('strong').textContent=wish.title;giftMessages[kind].querySelector('strong').hidden=!wish.title;const [poemText,sourceText]=wish.message.split('--');giftMessages[kind].querySelector('span').textContent=poemText;const source=giftMessages[kind].querySelector('.c-poem-source');const citation=sourceText?sourceText.replace('(节选)',''):'';const authorAt=citation.indexOf('·',citation.indexOf('》')+1);source.textContent=wish.kind==='film'?'台词摘自《'+wish.work+'》\n中文译意':citation?(authorAt>=0?'节选自'+citation.slice(0,authorAt)+'\n作者：'+citation.slice(authorAt+1):'节选自'+citation):'';source.hidden=!sourceText&&wish.kind!=='film';const x=kind==='warm'?118:567,y=kind==='warm'?424:411;for(let i=0;i<48;i++)confetti.push({x,y,vx:(Math.random()-.5)*170,vy:-95-Math.random()*130,spin:Math.random()*12,ink:color(['--gold','--red-light','--blue-light','--purple-light','--snow'][i%5]),birth:performance.now()+210});}giftMessages[kind].classList.toggle('is-open',openedGifts[kind]);if(paused)render(performance.now())};canvas.addEventListener('click',event=>{const box=canvas.getBoundingClientRect(),x=(event.clientX-box.left)*700/box.width,y=(event.clientY-box.top)*520/box.height;if(x>=62&&x<=174&&y>=420&&y<=494)openGift('warm','一份冬日温暖','愿你的冬天被温柔与惊喜环绕。');else if(x>=510&&x<=624&&y>=407&&y<=500)openGift('joy','一份节日喜悦','愿所有美好，如约而至。')});new ResizeObserver(resize).observe(canvas);resize();frame=requestAnimationFrame(render);const track=root.querySelector('#christmas-track'),trackButton=root.querySelector('.c-track-trigger'),tracks=[{title:'祝你圣诞快乐',src:'music/祝你圣诞快乐.mp3'},{title:'铃儿响叮当',src:'music/铃儿响叮当.mp3'},{title:'胡桃夹子·糖梅仙子',src:'music/胡桃夹子-糖梅仙子.mp3'}];let trackIndex=0;const songList=root.querySelector('#music-options'),songButtons=[...songList.querySelectorAll('[data-track]')];const syncTrackLabel=()=>{songButtons.forEach((button,index)=>button.setAttribute('aria-pressed',String(index===trackIndex)));trackButton.setAttribute('aria-label','切换配乐，当前：'+tracks[trackIndex].title)};const startMusic=()=>track.play().then(()=>{musicButton.textContent='关闭配乐';musicButton.setAttribute('aria-pressed','true')}).catch(()=>{musicButton.textContent='音乐不可用';musicButton.setAttribute('aria-pressed','false')});const stopMusic=()=>{track.pause();track.currentTime=0;musicButton.textContent='开启配乐';musicButton.setAttribute('aria-pressed','false')};const closeSongs=()=>{songList.hidden=true;trackButton.setAttribute('aria-expanded','false')};trackButton.addEventListener('click',()=>{songList.hidden=!songList.hidden;trackButton.setAttribute('aria-expanded',String(!songList.hidden))});songButtons.forEach(button=>button.addEventListener('click',()=>{const wasPlaying=!track.paused;trackIndex=Number(button.dataset.track);track.src=tracks[trackIndex].src;track.load();syncTrackLabel();closeSongs();trackButton.focus();if(wasPlaying)startMusic();else{musicButton.textContent='开启配乐';musicButton.setAttribute('aria-pressed','false')}}));document.addEventListener('pointerdown',event=>{if(!root.querySelector('.c-track').contains(event.target))closeSongs()});songList.addEventListener('keydown',event=>{if(event.key==='Escape'){closeSongs();trackButton.focus()}});musicButton.addEventListener('click',()=>{if(!track.paused){stopMusic();return}startMusic()});syncTrackLabel();document.addEventListener('visibilitychange',()=>{if(document.hidden&&!track.paused)stopMusic()});
+    })();
+  </script>
+</div>
+</body></html>
